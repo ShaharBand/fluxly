@@ -3,9 +3,9 @@ import unittest
 
 from flowcli import FlowCLI
 from flowcli.exceptions import DataErrorException
-from flowcli.status import StatusCodes
-from flowcli.workflow import Workflow, WorkflowInput 
 from flowcli.node import Node
+from flowcli.status import StatusCodes
+from flowcli.workflow import Workflow, WorkflowInput
 
 
 class OkNode(Node):

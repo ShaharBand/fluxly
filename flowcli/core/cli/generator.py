@@ -1,5 +1,5 @@
-from typing import Any
 import copy
+from typing import Any
 
 import click
 from pydantic import ValidationError

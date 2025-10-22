@@ -1,8 +1,7 @@
 
-from flowcli.node import Node
-
-from examples.structured_demo.workflow.input import DemoWorkflowInput
 from examples.structured_demo.nodes.beta.execution import BetaNodeExecution
+from examples.structured_demo.workflow.input import DemoWorkflowInput
+from flowcli.node import Node
 
 
 class Beta(Node):

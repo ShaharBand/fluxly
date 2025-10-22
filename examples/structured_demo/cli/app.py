@@ -1,7 +1,6 @@
-from flowcli import FlowCLI
-
 from examples.structured_demo.workflow.builder import build_demo_workflow
 from examples.structured_demo.workflow.input import DemoWorkflowInput
+from flowcli import FlowCLI
 
 
 def main() -> None:

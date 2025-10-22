@@ -158,7 +158,7 @@ class Workflow(BaseModel):
 
         if result and isinstance(result[0], Exception):
             self._handle_exception(result[0])
-        
+
     def _handle_exception(self, exception: Exception | WorkflowException | None) -> None:
         if exception is None:
             return

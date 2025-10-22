@@ -1,7 +1,6 @@
 import logging
 import sys
 from typing import Any
-from datetime import timezone
 
 from loguru import logger
 from pydantic import BaseModel, ConfigDict
