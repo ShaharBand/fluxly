@@ -16,3 +16,5 @@ pixi.lock
 dist/
 
 .mypy_cache
+
+uv.lock
