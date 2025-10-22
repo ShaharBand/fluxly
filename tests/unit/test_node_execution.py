@@ -9,23 +9,23 @@ from flowcli.status import StatusCodes
 class FlakyNode(Node):
     fail_times: int = 1
 
-    def _logic(self):
+    def _logic(self) -> None:
         if self.attempt <= self.fail_times:
             raise DataErrorException("transient failure")
 
 
 class AlwaysFailNode(Node):
-    def _logic(self):
+    def _logic(self) -> None:
         raise DataErrorException("permanent failure")
 
 
 class TimeoutNode(Node):
-    def _logic(self):
+    def _logic(self) -> None:
         time.sleep((self.timeout_seconds or 1) + 1)
 
 
 class NodeExecutionTest(unittest.TestCase):
-    def test_retry_success_then_complete(self):
+    def test_retry_success_then_complete(self) -> None:
         node = FlakyNode(name="flaky", fail_times=1, max_retries=2, retry_delay_seconds=1)
         node.execute()
 
@@ -37,7 +37,7 @@ class NodeExecutionTest(unittest.TestCase):
         self.assertIsNotNone(first.error)
         self.assertEqual(second.status, StatusCodes.COMPLETED)
 
-    def test_retry_exhausted_raises(self):
+    def test_retry_exhausted_raises(self) -> None:
         node = AlwaysFailNode(name="always-fail", max_retries=3, retry_delay_seconds=1)
         with self.assertRaises(DataErrorException):
             node.execute()
@@ -48,7 +48,7 @@ class NodeExecutionTest(unittest.TestCase):
             self.assertEqual(ex.status, StatusCodes.DATA_ERROR)
             self.assertIsNotNone(ex.error)
 
-    def test_timeout_sets_status_and_raises(self):
+    def test_timeout_sets_status_and_raises(self) -> None:
         node = TimeoutNode(name="timeout", timeout_seconds=1, max_retries=1)
         with self.assertRaises(TimeoutException):
             node.execute()

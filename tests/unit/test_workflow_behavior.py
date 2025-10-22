@@ -26,17 +26,23 @@ class SlowNode(Node):
 
 
 class WorkflowBehaviorTest(unittest.TestCase):
-    def _wf(self, node: Node, **kwargs) -> Workflow:
-        wf = Workflow(name="test-workflow", description="test workflow", version="1.0", inputs=WorkflowInput(verbose=False))
+    def _wf(self, node: Node, timeout_seconds: int | None = None) -> Workflow:
+        inputs = WorkflowInput(verbose=False, timeout_seconds=timeout_seconds)
+        wf = Workflow(
+            name="test-workflow",
+            description="test workflow",
+            version="1.0",
+            inputs=inputs
+        )
         wf.add_node(node)
         return wf
 
-    def test_success(self):
+    def test_success(self) -> None:
         wf = self._wf(OkNode(name="ok-node"))
         wf.execute()
         self.assertEqual(wf.last_execution.status, StatusCodes.COMPLETED)
 
-    def test_retry_then_success(self):
+    def test_retry_then_success(self) -> None:
         class Flaky(Node):
             fail_times: int = 1
             def _logic(self) -> None:
@@ -49,13 +55,13 @@ class WorkflowBehaviorTest(unittest.TestCase):
         self.assertEqual(node.attempt, 2)
         self.assertEqual(wf.last_execution.status, StatusCodes.COMPLETED)
 
-    def test_failure_sets_status_and_raises(self):
+    def test_failure_sets_status_and_raises(self) -> None:
         wf = self._wf(FailNode(name="fail"))
         with self.assertRaises(DataErrorException):
             wf.execute()
         self.assertEqual(wf.last_execution.status, StatusCodes.DATA_ERROR)
 
-    def test_timeout_sets_status_and_raises(self):
+    def test_timeout_sets_status_and_raises(self) -> None:
         node = SlowNode(name="slow", timeout_seconds=1)
         wf = self._wf(node, timeout_seconds=1)
         with self.assertRaises(TimeoutException):

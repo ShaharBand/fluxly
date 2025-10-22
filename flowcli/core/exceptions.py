@@ -4,7 +4,7 @@ from flowcli.core.status import StatusCodes
 
 
 class WorkflowException(Exception):
-    exit_code: Enum | int = None
+    exit_code: Enum | int | None = None
 
     def __init__(self, message: str = ""):
         if not isinstance(self.exit_code, Enum):

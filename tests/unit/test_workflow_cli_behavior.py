@@ -33,7 +33,7 @@ class FlowCLICliTest(unittest.TestCase):
     def tearDown(self) -> None:
         sys.argv = self._orig_argv
 
-    def test_cli_success_exit_code_zero(self):
+    def test_cli_success_exit_code_zero(self) -> None:
         cli = _build_cli("ok", OkNode(name="ok-node"))
         sys.argv = ["prog", "ok"]
         with self.assertRaises(SystemExit) as ctx:
@@ -41,7 +41,7 @@ class FlowCLICliTest(unittest.TestCase):
         self.assertEqual(ctx.exception.code, 0)
 
 
-    def test_cli_failure_exit_code_custom(self):
+    def test_cli_failure_exit_code_custom(self) -> None:
         cli = _build_cli("fail", FailNode(name="fail-node"))
         sys.argv = ["prog", "fail"]
         with self.assertRaises(SystemExit) as ctx:

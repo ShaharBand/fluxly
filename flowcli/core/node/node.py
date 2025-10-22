@@ -85,7 +85,7 @@ class Node(ABC, BaseModel):
     def _create_execution(self) -> NodeExecution:
         return NodeExecution()
 
-    def _start_node_execution(self):
+    def _start_node_execution(self) -> None:
         execution = self._create_execution()
         execution.metadata.start_time = datetime.now()
         execution.status = StatusCodes.IN_PROGRESS
@@ -94,7 +94,7 @@ class Node(ABC, BaseModel):
     def _run_with_timeout(self) -> None:
         result: list[Exception | None] = [None]
 
-        def runner():
+        def runner() -> None:
             try:
                 self._logic()
             except Exception as e:

@@ -26,9 +26,9 @@ from flowcli.services import LoggerConfig, LoggerService
 
 class Workflow(BaseModel):
     name: Annotated[str, Field(max_length=64, min_length=2, description="The name of the workflow.")]
-    description: Annotated[str, Field(max_length=128, min_length=3, description="The description of the workflow.")] = None
-    version: Annotated[str, Field(description="The workflow version.")] = None
-    inputs: Annotated[WorkflowInput, Field(description="The workflow inputs.")] = None
+    description: Annotated[str | None, Field(max_length=128, min_length=3, description="The description of the workflow.")] = None
+    version: Annotated[str | None, Field(description="The workflow version.")] = None
+    inputs: Annotated[WorkflowInput | None, Field(description="The workflow inputs.")] = None
 
     _id: str = PrivateAttr(default_factory=lambda: str(uuid4()))
     _executions: list[WorkflowExecution] = PrivateAttr(default_factory=list)
@@ -142,7 +142,7 @@ class Workflow(BaseModel):
     def _run_with_timeout(self) -> None:
         result: list[Exception | bool] = []
 
-        def runner():
+        def runner() -> None:
             try:
                 self._iterate_nodes()
                 result.append(True)

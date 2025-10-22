@@ -20,7 +20,7 @@ class Alpha(Node):
         return self._workflow_input
 
     def _create_execution(self) -> AlphaNodeExecution:
-        return AlphaNodeExecution(id=str(self.attempt))
+        return AlphaNodeExecution()
 
     def _logic(self) -> None:
         msg = self.workflow_input.message

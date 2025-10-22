@@ -22,7 +22,7 @@ class ExecutionGroupsTest(unittest.TestCase):
     def _wf(self) -> Workflow:
         return Workflow(name="eg-wf", description="exec groups", version="v", inputs=WorkflowInput(verbose=False))
 
-    def test_partial_success_across_groups_completes_workflow(self):
+    def test_partial_success_across_groups_completes_workflow(self) -> None:
         wf = self._wf()
 
         slow_ok = SlowOk(name="slow-ok", sleep_seconds=0.4)
@@ -51,7 +51,7 @@ class ExecutionGroupsTest(unittest.TestCase):
         self.assertEqual(ok2.last_execution.status, StatusCodes.COMPLETED)
         self.assertNotEqual(fail_fast.last_execution.status, StatusCodes.COMPLETED)
 
-    def test_all_groups_have_failure_causes_workflow_failure(self):
+    def test_all_groups_have_failure_causes_workflow_failure(self) -> None:
         wf = self._wf()
 
         slow_ok_1 = SlowOk(name="slow-ok-1", sleep_seconds=0.3)
