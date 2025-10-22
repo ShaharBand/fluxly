@@ -18,3 +18,5 @@ dist/
 .mypy_cache
 
 uv.lock
+
+.coverage

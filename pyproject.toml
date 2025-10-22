@@ -134,7 +134,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-source = ["app"]
+source = ["flowcli"]
 dynamic_context = "test_function"
 
 [tool.coverage.report]
