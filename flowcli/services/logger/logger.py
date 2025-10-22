@@ -1,6 +1,6 @@
 import logging
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from loguru import logger
 from pydantic import BaseModel, ConfigDict
@@ -12,25 +12,25 @@ class LoggerService(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     config: LoggerConfig
-    handlers: List[logging.Handler] = []
-    extra_params: Dict[str, str] = {}
+    handlers: list[logging.Handler] = []
+    extra_params: dict[str, str] = {}
 
     def model_post_init(self, __context: Any) -> None:
         logger.remove()
         self.set_extra_params(extra_params={})
 
-    def set_extra_params(self, extra_params: Dict[str, str]) -> None:
+    def set_extra_params(self, extra_params: dict[str, str]) -> None:
         self.extra_params = extra_params
         self.configure()
 
     def configure(self) -> None:
-        log_handler: Dict[str, Any] = {
+        log_handler: dict[str, Any] = {
             "sink": sys.stdout,
             "level": self.config.level,
             "format": self.__format_record,
             "diagnose": False,
         }
-        config: Dict[str, Any] = {
+        config: dict[str, Any] = {
             "handlers": [log_handler],
             "extra": self.extra_params,
         }
@@ -56,27 +56,27 @@ class LoggerService(BaseModel):
             self.handlers.remove(handler)
         self.configure()
 
-    def info(self, msg: Union[str, Any]) -> None:
+    def info(self, msg: str | Any) -> None:
         logger.info(self.__wrap_message(msg))
 
-    def debug(self, msg: Union[str, Any]) -> None:
+    def debug(self, msg: str | Any) -> None:
         logger.debug(self.__wrap_message(msg))
 
-    def warning(self, msg: Union[str, Any]) -> None:
+    def warning(self, msg: str | Any) -> None:
         logger.warning(self.__wrap_message(msg))
 
-    def error(self, msg: Union[str, Any]) -> None:
+    def error(self, msg: str | Any) -> None:
         logger.error(self.__wrap_message(msg))
 
-    def exception(self, msg: Union[str, Any]) -> None:
+    def exception(self, msg: str | Any) -> None:
         logger.exception(self.__wrap_message(msg))
 
-    def __wrap_message(self, msg: Union[str, Any]) -> str:
+    def __wrap_message(self, msg: str | Any) -> str:
         if not isinstance(msg, str):
             msg = str(msg)
         return msg if len(msg) <= self.config.max_print_length else msg[: self.config.max_print_length - 3] + "..."
 
-    def __format_record(self, record: Dict[str, Any]) -> str:
+    def __format_record(self, record: dict[str, Any]) -> str:
         dt_local = record["time"].astimezone()  # keep local timezone
         time_local_str = dt_local.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         epoch_ms = int(record["time"].timestamp() * 1000)
