@@ -30,6 +30,9 @@ jobs:
       - name: Setup Pixi environment
         run: pixi install --environment dev
 
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
       - name: Lint
         run: pixi run lint
 
