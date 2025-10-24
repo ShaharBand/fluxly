@@ -1067,14 +1067,19 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <hr />
 <h2 id="2-define-a-workflow-input">2. Define a Workflow Input<a class="headerlink" href="#2-define-a-workflow-input" title="Permanent link">&para;</a></h2>
 <p>Workflows use <strong>typed inputs</strong> with Pydantic for validation.<br />
-This allows your CLI commands to be auto-generated with <strong>type hints, defaults, and descriptions</strong>.</p>
+Annotate fields with descriptions and constraints to improve CLI help and validation.</p>
 <div class="admonition code">
-<p class="admonition-title">Workflow Input Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
+<p class="admonition-title">Workflow Input Example (with descriptions and validations)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyWorkflowInput</span><span class="p">(</span><span class="n">WorkflowInput</span><span class="p">):</span>
-    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Hello, FluxCLI!&quot;</span>
-    <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Message to print&quot;</span><span class="p">)]</span>
+        <span class="o">=</span> <span class="s2">&quot;Hello, FluxCLI!&quot;</span>
+    <span class="n">repeat</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;How many times to repeat&quot;</span><span class="p">)]</span>
+        <span class="o">=</span> <span class="mi">3</span>
 </code></pre></div>
 </div>
 <hr />
@@ -1155,12 +1160,27 @@ This allows your CLI commands to be auto-generated with <strong>type hints, defa
 </div>
 <hr />
 <h2 id="7-enable-auto-generated-documentation">7. Enable Auto-Generated Documentation<a class="headerlink" href="#7-enable-auto-generated-documentation" title="Permanent link">&para;</a></h2>
-<p>FluxCLI can automatically generate <strong>Markdown documentation</strong> and <strong>DAG diagrams</strong> for your workflows.</p>
+<p>FluxCLI can automatically generate <strong>Markdown documentation</strong> and <strong>DAG diagrams</strong>. Configure it either:</p>
+<ul>
+<li>Programmatically: set defaults in <code>workflow.inputs</code>.</li>
+<li>Via CLI flags: pass at runtime; flags map to <code>WorkflowInput</code> fields.</li>
+</ul>
 <div class="admonition code">
-<p class="admonition-title">Auto Documentation</p>
-<div class="highlight"><pre><span></span><code><span class="n">workflow</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">auto_generate_md</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">workflow</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">md_file_path</span> <span class="o">=</span> <span class="s2">&quot;workflow_doc.md&quot;</span>
-<span class="n">workflow</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">diagram_file_path</span> <span class="o">=</span> <span class="s2">&quot;workflow_diagram.png&quot;</span>
+<p class="admonition-title">Programmatic defaults (set once)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set default documentation behavior on the workflow template</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">MyWorkflowInput</span><span class="p">(</span>
+    <span class="n">auto_generate_md</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">md_file_path</span><span class="o">=</span><span class="s2">&quot;workflow_doc.md&quot;</span><span class="p">,</span>
+    <span class="n">diagram_file_path</span><span class="o">=</span><span class="s2">&quot;workflow_diagram.png&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition code">
+<p class="admonition-title">Via CLI flags (override defaults)</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>your_script.py<span class="w"> </span>run-demo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--auto-generate-md<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--md-file-path<span class="w"> </span>workflow_doc.md<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--diagram-file-path<span class="w"> </span>workflow_diagram.png
 </code></pre></div>
 </div>
 <div class="admonition note">
