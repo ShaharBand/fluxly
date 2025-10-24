@@ -53,6 +53,6 @@ Make sure to set an **exit code** using a `StatusCodes` Enum value.
     ```
 
 !!! note "Rules for Custom Exceptions"
-- Exit codes must be **validated integers (0–255)**.  
-- Raising a `WorkflowException` marks the **current node attempt** with that status.  
-- Workflow execution propagates the **consistent status and exit code** downstream.
+    - Exit codes must be **validated integers (0–255)**.  
+    - Raising a `WorkflowException` marks the **current node attempt** with that status.  
+    - Workflow execution propagates the **consistent status and exit code** downstream.
