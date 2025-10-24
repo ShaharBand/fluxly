@@ -75,7 +75,3 @@ pip install fluxcli
 ```
 
 ---
-
-## 5. Auto-generated Documentation & Diagrams
-
-See the documentation site for details on auto-generated docs and diagrams.
