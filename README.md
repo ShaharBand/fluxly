@@ -73,5 +73,3 @@ Install with `pip`:
 ```bash
 pip install fluxcli
 ```
-
----
