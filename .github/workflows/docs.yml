@@ -1,4 +1,4 @@
-name: Build Docs
+name: Deploy Docs
 
 on:
   push:
@@ -26,4 +26,5 @@ jobs:
         run: pixi install -e dev
 
       - name: Serve MkDocs site
-        run: pixi run docs-serve --host 0.0.0.0 --port 8000
+        run: pixi run -e dev docs-serve --dev-addr 0.0.0.0:8000
+
