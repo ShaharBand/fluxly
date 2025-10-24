@@ -1157,6 +1157,11 @@ No DSLs or YAML schemas are required—use <strong>Pydantic</strong> for input v
 </code></pre></div>
 </div>
 <div class="admonition code">
+<p class="admonition-title">Edge that runs only if source completed</p>
+<div class="highlight"><pre><span></span><code><span class="n">wf</span><span class="o">.</span><span class="n">add_edge_if_source_completed</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="n">consumer</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition code">
 <p class="admonition-title">Conditional edge based on upstream status</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusCodes</span>
