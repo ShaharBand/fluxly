@@ -208,7 +208,7 @@ Helps teams **review workflow structures** and share knowledge.
 
 !!! note "Complex workflow"
     ![Complex workflow](imgs/complex_workflow.png)
-    *Branching, conditional edges, and parallel paths stay readable.*
+    *Branching, conditional edges, and parallel paths.*
 
 ---
 
