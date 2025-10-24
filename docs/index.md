@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="imgs/logo.png" alt="FluxCLI Logo" title="FluxCLI Logo" style="max-width: 200px;" />
+  <img src="imgs/logo.jpg" alt="FluxCLI Logo" title="FluxCLI Logo" style="max-width: 200px;" />
   
   <h1>FluxCLI</h1>
   <p><em>Lightweight, CLI-first framework for building <strong>DAG-based workflows</strong></em></p>
