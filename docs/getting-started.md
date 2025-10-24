@@ -84,6 +84,7 @@ Create a workflow, add nodes, and define their dependencies.
 
     # Optionally, add edges if multiple nodes exist
     # workflow.add_edge(node_a, node_b)
+    # workflow.add_edge_if_source_completed(node_a, node_b)  # run node_b only if node_a completed
     ```
 
 ---

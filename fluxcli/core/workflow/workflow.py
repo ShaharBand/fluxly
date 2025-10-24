@@ -74,6 +74,9 @@ class Workflow(BaseModel):
     def add_conditional_edge(self, source_node: Node, dest_node: Node, condition: Callable[[], bool]) -> None:
         self._graph.add_conditional_edge(source_node, dest_node, condition)
 
+    def add_edge_if_source_completed(self, source_node: Node, dest_node: Node) -> None:
+        self._graph.add_edge_if_source_completed(source_node, dest_node)
+
     def add_execution_group(self, nodes: list[Node]) -> None:
         if not nodes:
             raise ValueError("Execution group must include at least one node.")

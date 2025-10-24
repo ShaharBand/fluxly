@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from graphlib import CycleError, TopologicalSorter
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 from fluxcli.core.node.node import Node
 from fluxcli.core.status import StatusCodes
@@ -19,19 +19,24 @@ class Edge(BaseModel):
 
 
 class WorkflowGraph(BaseModel):
-    nodes: dict[str, Node] = Field(default_factory=dict)
     edges: list[Edge] = Field(default_factory=list)
+    _nodes: dict[str, Node] = PrivateAttr(default_factory=dict)
+
+    @property
+    def nodes(self) -> dict[str, Node]:
+        # Return the live mapping of node instances (by reference)
+        return self._nodes
 
     def get_parents(self, node: Node) -> list[Node]:
-        return [self.nodes[edge.source] for edge in self.edges if edge.destination == node.name]
+        return [self._nodes[edge.source] for edge in self.edges if edge.destination == node.name]
 
     def get_children(self, node: Node) -> list[Node]:
-        return [self.nodes[edge.destination] for edge in self.edges if edge.source == node.name]
+        return [self._nodes[edge.destination] for edge in self.edges if edge.source == node.name]
 
     def add_node(self, node: Node) -> None:
-        if node.name in self.nodes:
+        if node.name in self._nodes:
             raise ValueError(f"Node '{node.name}' already exists.")
-        self.nodes[node.name] = node
+        self._nodes[node.name] = node
 
     def add_edge(self, source_node: Node, dest_node: Node) -> Edge:
         self._validate_nodes(source_node, dest_node)

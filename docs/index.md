@@ -105,6 +105,12 @@ Workflows orchestrate retries, timeouts, and overall execution.
         return wf
     ```
 
+!!! code "Edge that runs only if source completed"
+    ```python
+    # Alternatively, run a node only if its parent completed successfully
+    wf.add_edge_if_source_completed(alpha, gamma)
+    ```
+
 ### 4) Wire into a CLI
 
 Use `FluxCLI` to expose your workflow as a single command. CLI flags are auto-generated from your `WorkflowInput` fields (with types and defaults), so your interface stays consistent with your code.

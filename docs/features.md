@@ -109,6 +109,11 @@ Each node typically lives in its own file; import node classes and create instan
     wf.add_edge(producer, consumer)
     ```
 
+!!! code "Edge that runs only if source completed"
+    ```python
+    wf.add_edge_if_source_completed(producer, consumer)
+    ```
+
 !!! code "Conditional edge based on upstream status"
     ```python
     from fluxcli.workflow import Workflow

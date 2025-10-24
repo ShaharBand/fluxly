@@ -3,7 +3,7 @@ from fluxcli.core.workflow.input import WorkflowInput
 
 def build_cli_command_from_workflow_input(workflow_input: WorkflowInput) -> str:
     flags = []
-    for field_name, field in workflow_input.model_fields.items():
+    for field_name, field in workflow_input.__pydantic_fields__.items():
         if field.json_schema_extra and field.json_schema_extra.get("exclude_from_cli"):
             continue
 

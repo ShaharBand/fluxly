@@ -182,6 +182,11 @@ Edges define **dependencies between nodes**. Conditional edges execute only if t
     )
     ```
 
+!!! code "Edge that runs only if source completed"
+    ```python
+    workflow.add_edge_if_source_completed(node_a, node_b)
+    ```
+
 ---
 
 ## Wrapping & Extensibility
