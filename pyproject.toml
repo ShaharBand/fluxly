@@ -62,6 +62,7 @@ test = "pytest ."
 lint = "ruff check ."
 typecheck = "mypy ."
 coverage = "coverage run -m pytest && coverage report -m"
+docs-serve = "mkdocs serve"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fluxcli"]

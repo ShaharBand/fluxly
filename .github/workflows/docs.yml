@@ -1,0 +1,29 @@
+name: Build Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Pixi
+        run: |
+          curl -fsSL https://pixi.sh/install.sh | bash
+          echo "$HOME/.pixi/bin" >> $GITHUB_PATH
+
+      - name: Verify Pixi installation
+        run: pixi --version
+
+      - name: Install dev environment
+        run: pixi install dev
+
+      - name: Serve MkDocs site
+        run: pixi run docs-serve --host 0.0.0.0 --port 8000
