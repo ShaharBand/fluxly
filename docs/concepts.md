@@ -28,7 +28,7 @@ A `Workflow` represents a **DAG of nodes**, including metadata, inputs, executio
 !!! note "Typed Inputs"
     - Uses Pydantic for validation.
     - Drives **CLI auto-generation**, including flags, defaults, and type hints.
-    - Accessible to all nodes via `_workflow_input`.
+    - Accessible to all nodes via `self.workflow_input`.
 
 !!! code "WorkflowInput Example"
     ```python
@@ -56,66 +56,95 @@ A `Node` represents a **single unit of work** in a workflow.
     from fluxcli.node import Node
 
     class PrintNode(Node):
-        _workflow_input: MyInput
+        @property
+        def workflow_input(self) -> MyInput:
+            return self._workflow_input
 
-        def _logic(self):
-            for i in range(self._workflow_input.repeat):
-                print(f"{i+1}: {self._workflow_input.message}")
+        def _logic(self) -> None:
+            for i in range(self.workflow_input.repeat):
+                self._logger.info(f"{i+1}: {self.workflow_input.message}")
     ```
 
 ---
 
 ## Node-to-Node Communication
 
-Nodes communicate via **typed execution outputs**, keeping dependencies explicit and safe.  
-Each node can live in a **separate file** and be imported into the workflow.
+Nodes communicate via **typed execution classes**, either by:
+- Importing and referencing the upstream node instance after it ran
+- Using a **conditional edge** that checks upstream `last_execution`
 
-!!! code "producer_node.py"
+Each node typically lives in its own file; import node classes and create instances in the workflow.
+
+!!! code "producer.py"
     ```python
-    from fluxcli.node import Node
-    from my_input import MyInput
+    from fluxcli.node import Node, NodeExecution, NodeOutput
+
+    class ProducerOutput(NodeOutput):
+        value: int | None = None
+
+    class ProducerExecution(NodeExecution):
+        output: ProducerOutput = ProducerOutput()
 
     class Producer(Node):
-        _workflow_input: MyInput
+        def _create_execution(self) -> ProducerExecution:
+            return ProducerExecution()
 
-        def _logic(self):
-            result = 42
-            return {"result": result}
+        def _logic(self) -> None:
+            self.current_execution.output.value = 42
     ```
 
-!!! code "consumer_node.py"
+!!! code "consumer.py"
     ```python
     from fluxcli.node import Node
-    from producer_node import Producer
+
+    from producer import Producer
 
     class Consumer(Node):
-        def _logic(self, producer: Producer):
-            output = producer.last_execution.output
-            print(f"Received: {output['result']}")
+        producer: Producer
+
+        def _logic(self) -> None:
+            value = self.producer.last_execution.output.value
+            self._logger.info(value)
     ```
 
-!!! code "main_workflow.py"
+!!! code "workflow.py"
     ```python
     from fluxcli.workflow import Workflow
-    from my_input import MyInput
-    from producer_node import Producer
-    from consumer_node import Consumer
 
-    workflow = Workflow(name="communication-demo")
+    from producer import Producer
+    from consumer import Consumer
 
+    wf = Workflow(name="demo")
+    producer = Producer(name="producer")
+    consumer = Consumer(name="consumer", producer=producer)
+
+    wf.add_node(producer)
+    wf.add_node(consumer)
+    wf.add_edge(producer, consumer)
+    ```
+
+!!! code "Conditional edge based on upstream status"
+    ```python
+    from fluxcli.workflow import Workflow
+    from fluxcli.status import StatusCodes
+
+    wf = Workflow(name="demo")
     producer = Producer(name="producer")
     consumer = Consumer(name="consumer")
 
-    workflow.add_node(producer, consumer)
-    workflow.add_edge(producer, consumer)
+    wf.add_node(producer)
+    wf.add_node(consumer)
 
-    workflow.run(MyInput())
+    # Run consumer only if producer completed successfully and produced a value
+    wf.add_conditional_edge(
+        producer,
+        consumer,
+        condition=lambda: (
+            producer.last_execution.status == StatusCodes.COMPLETED
+            and producer.last_execution.output.value is not None
+        ),
+    )
     ```
-
-!!! note "Node Communication Rules"
-    - The producer must execute before its output is consumed.  
-    - The consumer accesses typed outputs via the producer’s instance.  
-    - `_logic()` can type-hint the producer for clarity and validation.
 
 ---
 
@@ -167,14 +196,14 @@ Workflows and nodes can be **wrapped or subclassed** to add:
 !!! code "Extensibility Example"
     ```python
     class LoggingNode(PrintNode):
-        def on_start(self):
-            print(f"Starting {self.name}")
+        def on_start(self) -> None:
+            self._logger.info(f"Starting {self.name}")
 
-        def on_success(self):
-            print(f"Finished {self.name}")
+        def on_success(self) -> None:
+            self._logger.info(f"Finished {self.name}")
 
-        def on_failure(self, error):
-            print(f"{self.name} failed: {error}")
+        def on_failure(self, error) -> None:
+            self._logger.info(f"{self.name} failed: {error}")
     ```
 
 This enables **consistent cross-cutting behavior** without modifying core business logic.
@@ -194,25 +223,28 @@ FluxCLI nodes provide **lifecycle hooks** that let you add custom behavior at ke
 !!! code "Hooks Example"
     ```python
     from fluxcli.node import Node
+
     from my_input import MyInput
 
     class LoggingNode(Node):
-        _workflow_input: MyInput
+        @property
+        def workflow_input(self) -> MyInput:
+            return self._workflow_input
 
-        def _logic(self):
-            print(f"Running logic for {self.name}")
+        def _logic(self) -> None:
+            self._logger.info(f"Running logic for {self.name}")
 
-        def on_start(self):
-            print(f"Starting node: {self.name}")
+        def on_start(self) -> None:
+            self._logger.info(f"Starting node: {self.name}")
 
-        def on_success(self):
-            print(f"Node succeeded: {self.name}")
+        def on_success(self) -> None:
+            self._logger.info(f"Node succeeded: {self.name}")
 
-        def on_failure(self, error):
-            print(f"Node failed: {self.name} with error {error}")
+        def on_failure(self, error) -> None:
+            self._logger.info(f"Node failed: {self.name} with error {error}")
 
-        def on_finish(self):
-            print(f"Finished execution for node: {self.name}")
+        def on_finish(self) -> None:
+            self._logger.info(f"Finished execution for node: {self.name}")
     ```
 
 ---
@@ -244,8 +276,7 @@ Example:
 !!! code "custom_execution.py"
     ```python
     from pydantic import BaseModel
-    from fluxcli.node import NodeExecution
-    from fluxcli.node import NodeMetadata
+    from fluxcli.node import NodeExecution, NodeMetadata
 
     # Custom output for this node
     class CustomNodeOutput(BaseModel):
@@ -261,8 +292,9 @@ Using Custom Execution:
 
 !!! code "custom_node.py"
     ```python
-    import CustomNodeExecution, CustomNodeOutput
     from fluxcli.node import Node
+
+    import CustomNodeExecution, CustomNodeOutput
 
     class CustomNode(Node):
         @property

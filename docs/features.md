@@ -17,9 +17,12 @@ This eliminates manual parsing and ensures **consistent interfaces across script
         message: str = "hello"
 
     class Echo(Node):
-        _workflow_input: MyInput
-        def _logic(self):
-            print(f"Message: {self._workflow_input.message}")
+        @property
+        def workflow_input(self) -> MyInput:
+            return self._workflow_input
+
+        def _logic(self) -> None:
+            self._logger.info(f"Message: {self.workflow_input.message}")
 
     cli = FluxCLI()
     cli.add_command("echo-msg", lambda: Workflow("echo-demo"), MyInput)
@@ -39,28 +42,94 @@ No DSLs or YAML schemas are required—use **Pydantic** for input validation and
         count: int = 5
 
     class Counter(Node):
-        _workflow_input: CounterInput
-        def _logic(self):
-            for i in range(self._workflow_input.count):
-                print(f"Step {i+1}")
+        @property
+        def workflow_input(self) -> CounterInput:
+            return self._workflow_input
+
+        def _logic(self) -> None:
+            for i in range(self.workflow_input.count):
+                self._logger.info(f"Step {i+1}")
     ```
 
 ---
 
 ## Node-to-node communication
 
-Nodes communicate via **typed execution outputs**, not ad-hoc dictionaries or positional references.  
-This ensures **clear boundaries, maintainability, and debuggability**.
+Nodes communicate via **typed execution classes**, either by:
+- Importing and referencing the upstream node instance after it ran
+- Using a **conditional edge** that checks upstream `last_execution`
 
-!!! code "Node Communication"
+Each node typically lives in its own file; import node classes and create instances in the workflow.
+
+!!! code "producer.py"
     ```python
-    class OutputNode(Node):
-        def _logic(self):
-            return {"result": 42}
+    from fluxcli.node import Node, NodeExecution, NodeOutput
 
-    class ConsumerNode(Node):
-        def _logic(self, output_from_previous: dict):
-            print(output_from_previous["result"])
+    class ProducerOutput(NodeOutput):
+        value: int | None = None
+
+    class ProducerExecution(NodeExecution):
+        output: ProducerOutput = ProducerOutput()
+
+    class Producer(Node):
+        def _create_execution(self) -> ProducerExecution:
+            return ProducerExecution()
+
+        def _logic(self) -> None:
+            self.current_execution.output.value = 42
+    ```
+
+!!! code "consumer.py"
+    ```python
+    from fluxcli.node import Node
+
+    from producer import Producer
+
+    class Consumer(Node):
+        producer: Producer
+
+        def _logic(self) -> None:
+            value = self.producer.last_execution.output.value
+            self._logger.info(value)
+    ```
+
+!!! code "workflow.py"
+    ```python
+    from fluxcli.workflow import Workflow
+
+    from producer import Producer
+    from consumer import Consumer
+
+    wf = Workflow(name="demo")
+    producer = Producer(name="producer")
+    consumer = Consumer(name="consumer", producer=producer)
+
+    wf.add_node(producer)
+    wf.add_node(consumer)
+    wf.add_edge(producer, consumer)
+    ```
+
+!!! code "Conditional edge based on upstream status"
+    ```python
+    from fluxcli.workflow import Workflow
+    from fluxcli.status import StatusCodes
+
+    wf = Workflow(name="demo")
+    producer = Producer(name="producer")
+    consumer = Consumer(name="consumer")
+
+    wf.add_node(producer)
+    wf.add_node(consumer)
+
+    # Run consumer only if producer completed successfully and produced a value
+    wf.add_conditional_edge(
+        producer,
+        consumer,
+        condition=lambda: (
+            producer.last_execution.status == StatusCodes.COMPLETED
+            and producer.last_execution.output.value is not None
+        ),
+    )
     ```
 
 ---
@@ -68,7 +137,7 @@ This ensures **clear boundaries, maintainability, and debuggability**.
 ## DAG orchestration with validation and retries
 
 Workflows are automatically validated as DAGs.  
-Execution respects dependencies and conditional edges. **Retries and timeouts** keep workflows robust.
+Execution respects dependencies and conditional edges.
 
 !!! code "DAG Example"
     ```python
@@ -101,11 +170,11 @@ Hooks exist at both **node and workflow levels**:
 !!! code "Logging Example"
     ```python
     class Echo(Node):
-        def on_start(self):
-            print(f"Starting {self.name}")
+        def on_start(self) -> None:
+            self._logger.info(f"Starting {self.name}")
 
-        def on_success(self):
-            print(f"Finished {self.name}")
+        def on_success(self) -> None:
+            self._logger.info(f"Finished {self.name}")
     ```
 
 ---
@@ -118,11 +187,11 @@ Hooks exist at both **node and workflow levels**:
 
 !!! code "Exception Example"
     ```python
-    from fluxcli.core.exceptions import WorkflowException
-    from fluxcli.core.status import StatusCodes
+    from fluxcli.exceptions import WorkflowException
+    from fluxcli.status import StatusCodes
 
     class MyNode(Node):
-        def _logic(self):
+        def _logic(self) -> None:
             raise WorkflowException("Something went wrong", exit_code=StatusCodes.FAILURE)
     ```
 

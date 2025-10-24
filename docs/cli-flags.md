@@ -11,6 +11,7 @@ You can control how each field is exposed or presented using `json_schema_extra`
 !!! code "WorkflowInput Example"
     ```python
     from typing import Annotated
+    
     from pydantic import Field
     from fluxcli.workflow import WorkflowInput
 

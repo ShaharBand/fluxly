@@ -44,6 +44,7 @@ Make sure to set an **exit code** using a `StatusCodes` Enum value.
 !!! code "Custom Exception Example"
     ```python
     from enum import Enum
+    
     from fluxcli.exceptions import WorkflowException
     from fluxcli.status import StatusCodes
 

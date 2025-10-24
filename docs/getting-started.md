@@ -50,11 +50,13 @@ Nodes encapsulate **single units of work**. Each node receives the workflow inpu
     from fluxcli.node import Node
 
     class PrintNode(Node):
-        _workflow_input: MyWorkflowInput
+        @property
+        def workflow_input(self) -> MyWorkflowInput:
+            return self._workflow_input
 
-        def _logic(self):
-            for i in range(self._workflow_input.repeat):
-                print(f"{i+1}: {self._workflow_input.message}")
+        def _logic(self) -> None:
+            for i in range(self.workflow_input.repeat):
+                self._logger.info(f"{i+1}: {self.workflow_input.message}")
     ```
 
 ---
@@ -115,14 +117,14 @@ Extend nodes with **hooks** for logging, metrics, cleanup, or notifications. Hoo
 !!! code "Lifecycle Hooks Example"
     ```python
     class LoggingNode(PrintNode):
-        def on_start(self):
-            print(f"Starting node: {self.name}")
+        def on_start(self) -> None:
+            self._logger.info(f"Starting node: {self.name}")
 
-        def on_success(self):
-            print(f"Finished node: {self.name}")
+        def on_success(self) -> None:
+            self._logger.info(f"Finished node: {self.name}")
 
-        def on_failure(self, error):
-            print(f"Node {self.name} failed: {error}")
+        def on_failure(self, error) -> None:
+            self._logger.info(f"Node {self.name} failed: {error}")
     ```
 
 ---

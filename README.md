@@ -33,10 +33,11 @@ Workflows can run standalone or as part of a larger system, making FluxCLI both 
 
 ## Documentation
 
-Full documentation is hosted on GitHub Pages:
+Comprehensive documentation for FluxCLI is available online:
 
-- Hosted docs: https://shaharband.github.io/fluxcli/
+- **View the docs:** [GitHub Pages](https://shaharband.github.io/fluxcli/)
 
+---
 
 ## 1. Key Features
 
@@ -54,6 +55,7 @@ Full documentation is hosted on GitHub Pages:
 
 - [**Pydantic**](https://github.com/pydantic/pydantic): Strict data validation and schema for inputs/outputs.
 - [**Typer**](https://github.com/fastapi/typer): Easy wrapper for building great CLIs.
+- [**Loguru**](https://github.com/Delgan/loguru): Simple, efficient logging for Python.
 - [**Diagrams**](https://github.com/mingrammer/diagrams): Auto-generate DAG diagrams as code.
 - [**Pixi**](https://github.com/prefix-dev/pixi): Cross-platform package and environment management.
 - [**Ruff**](https://github.com/charliermarsh/ruff): Lightning-fast linting.
