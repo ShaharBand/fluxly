@@ -1087,7 +1087,7 @@
 <ul>
 <li>Uses Pydantic for validation.</li>
 <li>Drives <strong>CLI auto-generation</strong>, including flags, defaults, and type hints.</li>
-<li>Accessible to all nodes via <code>_workflow_input</code>.</li>
+<li>Accessible to all nodes via <code>self.workflow_input</code>.</li>
 </ul>
 </div>
 <div class="admonition code">
@@ -1116,66 +1116,91 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PrintNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="n">_workflow_input</span><span class="p">:</span> <span class="n">MyInput</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">workflow_input</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyInput</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflow_input</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_workflow_input</span><span class="o">.</span><span class="n">repeat</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workflow_input</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_input</span><span class="o">.</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_input</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <hr />
 <h2 id="node-to-node-communication">Node-to-Node Communication<a class="headerlink" href="#node-to-node-communication" title="Permanent link">&para;</a></h2>
-<p>Nodes communicate via <strong>typed execution outputs</strong>, keeping dependencies explicit and safe.<br />
-Each node can live in a <strong>separate file</strong> and be imported into the workflow.</p>
+<p>Nodes communicate via <strong>typed execution classes</strong>, either by:
+- Importing and referencing the upstream node instance after it ran
+- Using a <strong>conditional edge</strong> that checks upstream <code>last_execution</code></p>
+<p>Each node typically lives in its own file; import node classes and create instances in the workflow.</p>
 <div class="admonition code">
-<p class="admonition-title">producer_node.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_input</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyInput</span>
+<p class="admonition-title">producer.py</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeOutput</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProducerOutput</span><span class="p">(</span><span class="n">NodeOutput</span><span class="p">):</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProducerExecution</span><span class="p">(</span><span class="n">NodeExecution</span><span class="p">):</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">ProducerOutput</span> <span class="o">=</span> <span class="n">ProducerOutput</span><span class="p">()</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Producer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="n">_workflow_input</span><span class="p">:</span> <span class="n">MyInput</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProducerExecution</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ProducerExecution</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="mi">42</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">42</span>
 </code></pre></div>
 </div>
 <div class="admonition code">
-<p class="admonition-title">consumer_node.py</p>
+<p class="admonition-title">consumer.py</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">producer_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">producer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Consumer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">:</span> <span class="n">Producer</span><span class="p">):</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">producer</span><span class="o">.</span><span class="n">last_execution</span><span class="o">.</span><span class="n">output</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received: </span><span class="si">{</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">producer</span><span class="p">:</span> <span class="n">Producer</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">last_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <div class="admonition code">
-<p class="admonition-title">main_workflow.py</p>
+<p class="admonition-title">workflow.py</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_input</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyInput</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">producer_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">consumer_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Consumer</span>
 
-<span class="n">workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;communication-demo&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">producer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">consumer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Consumer</span>
 
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">)</span>
+<span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;producer&quot;</span><span class="p">)</span>
+<span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;consumer&quot;</span><span class="p">,</span> <span class="n">producer</span><span class="o">=</span><span class="n">producer</span><span class="p">)</span>
+
+<span class="n">wf</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">producer</span><span class="p">)</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="n">consumer</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition code">
+<p class="admonition-title">Conditional edge based on upstream status</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusCodes</span>
+
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">)</span>
 <span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;producer&quot;</span><span class="p">)</span>
 <span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;consumer&quot;</span><span class="p">)</span>
 
-<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="n">consumer</span><span class="p">)</span>
-<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">producer</span><span class="p">,</span> <span class="n">consumer</span><span class="p">)</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">producer</span><span class="p">)</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
 
-<span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">MyInput</span><span class="p">())</span>
+<span class="c1"># Run consumer only if producer completed successfully and produced a value</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">add_conditional_edge</span><span class="p">(</span>
+    <span class="n">producer</span><span class="p">,</span>
+    <span class="n">consumer</span><span class="p">,</span>
+    <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">last_execution</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusCodes</span><span class="o">.</span><span class="n">COMPLETED</span>
+        <span class="ow">and</span> <span class="n">producer</span><span class="o">.</span><span class="n">last_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">),</span>
+<span class="p">)</span>
 </code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Node Communication Rules</p>
-<ul>
-<li>The producer must execute before its output is consumed.  </li>
-<li>The consumer accesses typed outputs via the producer’s instance.  </li>
-<li><code>_logic()</code> can type-hint the producer for clarity and validation.</li>
-</ul>
 </div>
 <hr />
 <h2 id="execution-groups">Execution Groups<a class="headerlink" href="#execution-groups" title="Permanent link">&para;</a></h2>
@@ -1221,14 +1246,14 @@ Each node can live in a <strong>separate file</strong> and be imported into the 
 <div class="admonition code">
 <p class="admonition-title">Extensibility Example</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LoggingNode</span><span class="p">(</span><span class="n">PrintNode</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <p>This enables <strong>consistent cross-cutting behavior</strong> without modifying core business logic.</p>
@@ -1247,25 +1272,28 @@ Each node can live in a <strong>separate file</strong> and be imported into the 
 <div class="admonition code">
 <p class="admonition-title">Hooks Example</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">my_input</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyInput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">LoggingNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="n">_workflow_input</span><span class="p">:</span> <span class="n">MyInput</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">workflow_input</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyInput</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflow_input</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running logic for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running logic for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting node: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting node: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node succeeded: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node succeeded: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> with error </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> with error </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished execution for node: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished execution for node: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <hr />
@@ -1296,8 +1324,7 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 <div class="admonition code">
 <p class="admonition-title">custom_execution.py</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeMetadata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeMetadata</span>
 
 <span class="c1"># Custom output for this node</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeOutput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1312,8 +1339,9 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 <p>Using Custom Execution:</p>
 <div class="admonition code">
 <p class="admonition-title">custom_node.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">CustomNodeExecution</span><span class="o">,</span><span class="w"> </span><span class="nn">CustomNodeOutput</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">CustomNodeExecution</span><span class="o">,</span><span class="w"> </span><span class="nn">CustomNodeOutput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="nd">@property</span>

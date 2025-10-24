@@ -472,27 +472,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-define-inputs-and-a-node" class="md-nav__link">
+  <a href="#1-define-workflow-input" class="md-nav__link">
     <span class="md-ellipsis">
-      1) Define inputs and a node
+      1) Define workflow input
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-build-a-workflow" class="md-nav__link">
+  <a href="#2-make-nodes" class="md-nav__link">
     <span class="md-ellipsis">
-      2) Build a workflow
+      2) Make nodes
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-wire-into-a-cli" class="md-nav__link">
+  <a href="#3-build-a-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      3) Wire into a CLI
+      3) Build a workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-wire-into-a-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      4) Wire into a CLI
     </span>
   </a>
   
@@ -972,27 +981,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-define-inputs-and-a-node" class="md-nav__link">
+  <a href="#1-define-workflow-input" class="md-nav__link">
     <span class="md-ellipsis">
-      1) Define inputs and a node
+      1) Define workflow input
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-build-a-workflow" class="md-nav__link">
+  <a href="#2-make-nodes" class="md-nav__link">
     <span class="md-ellipsis">
-      2) Build a workflow
+      2) Make nodes
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-wire-into-a-cli" class="md-nav__link">
+  <a href="#3-build-a-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      3) Wire into a CLI
+      3) Build a workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-wire-into-a-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      4) Wire into a CLI
     </span>
   </a>
   
@@ -1050,17 +1068,19 @@
 <p class="admonition-title">Complex workflow</p>
 <p><div align="center">
   <img src="imgs/complex_workflow.png" alt="Complex Workflow Diagram" title="Complex Workflow Diagram" style="max-width: 700px; width: 100%;" />
-  <p><em>Branching, conditional edges, and parallel paths stay readable.</em></p>
+  <p><em>Clear representation of workflow DAG with branching and parallel execution.</em></p>
 </div></p>
 </div>
 <hr />
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <ul>
-<li>CLI-based workflow with <strong>typed inputs/outputs</strong></li>
-<li>DAG-based workflow orchestration with <strong>validation, retries, and isolation</strong></li>
-<li>Strong isolation between nodes with explicit data flow</li>
-<li>Extensible <strong>lifecycle hooks</strong> and custom exceptions with exit codes</li>
-<li>Auto-generated <strong>docs and diagrams</strong></li>
+<li><strong>CLI-based actions</strong> – every node has a clear interface for inputs and outputs.</li>
+<li><strong>DAG-based workflows</strong> – define arbitrary connections between tasks and their dependencies.</li>
+<li><strong>Highly structured workflows</strong> – strict validation ensures safer pipelines, easier debugging, and predictable behavior.</li>
+<li><strong>Self-orchestrated nodes</strong> – each graph workflow manages its own execution order, retries, and dependencies.</li>
+<li><strong>Lightweight building blocks</strong> – graph workflows are small, self-contained units that can each run in their own environment.</li>
+<li><strong>Extensible by design</strong> – wrap graph workflows with your own classes to add logging, metrics, or integrations.</li>
+<li><strong>Local-first development</strong> – debug and run workflows as simple CLIs, then scale them seamlessly to CI/CD or external orchestrators.</li>
 </ul>
 <hr />
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
@@ -1071,38 +1091,43 @@
 </div>
 <hr />
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<h3 id="1-define-inputs-and-a-node">1) Define inputs and a node<a class="headerlink" href="#1-define-inputs-and-a-node" title="Permanent link">&para;</a></h3>
-<p>Create a typed <code>WorkflowInput</code> (validated by Pydantic) and a <code>Node</code> containing your main logic in <code>_logic()</code>.<br />
-Each node receives a strongly-typed <code>workflow_input</code>, keeping your code safe and easy to read.</p>
+<h3 id="1-define-workflow-input">1) Define workflow input<a class="headerlink" href="#1-define-workflow-input" title="Permanent link">&para;</a></h3>
+<p>Create a typed <code>WorkflowInput</code>. These fields become CLI flags automatically.</p>
 <div class="admonition code">
-<p class="admonition-title">Node &amp; Input Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">WorkflowInput</span>
+<p class="admonition-title">WorkflowInput Example</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyInput</span><span class="p">(</span><span class="n">WorkflowInput</span><span class="p">):</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;world&quot;</span>
+</code></pre></div>
+</div>
+<h3 id="2-make-nodes">2) Make nodes<a class="headerlink" href="#2-make-nodes" title="Permanent link">&para;</a></h3>
+<p>Implement <code>Node</code> logic in <code>_logic()</code> and type-narrow <code>workflow_input</code> for convenience.</p>
+<div class="admonition code">
+<p class="admonition-title">Node Example</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Echo</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="n">_workflow_input</span><span class="p">:</span> <span class="n">MyInput</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">workflow_input</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyInput</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workflow_input</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Echo: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_input</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Echo: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow_input</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 </div>
-<h3 id="2-build-a-workflow">2) Build a workflow<a class="headerlink" href="#2-build-a-workflow" title="Permanent link">&para;</a></h3>
+<h3 id="3-build-a-workflow">3) Build a workflow<a class="headerlink" href="#3-build-a-workflow" title="Permanent link">&para;</a></h3>
 <p>Create a <code>Workflow</code>, add nodes to it, and wire edges/conditions to express execution order and data dependencies.<br />
 Workflows orchestrate retries, timeouts, and overall execution.</p>
 <div class="admonition code">
 <p class="admonition-title">Workflow Example</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_workflow</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_workflow</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Workflow</span><span class="p">:</span>
     <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Demo flow&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Define nodes</span>
-    <span class="n">alpha</span> <span class="o">=</span> <span class="n">Echo</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prints a message&quot;</span><span class="p">,</span> <span class="n">timeout_seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="c1"># Nodes: demonstrate node-level timeout and retries</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">Echo</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prints a message&quot;</span><span class="p">,</span> <span class="n">timeout_seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">retry_delay_seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">Echo</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;prints after alpha&quot;</span><span class="p">)</span>
     <span class="n">gamma</span> <span class="o">=</span> <span class="n">Echo</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;conditional step&quot;</span><span class="p">)</span>
 
@@ -1118,7 +1143,7 @@ Workflows orchestrate retries, timeouts, and overall execution.</p>
     <span class="k">return</span> <span class="n">wf</span>
 </code></pre></div>
 </div>
-<h3 id="3-wire-into-a-cli">3) Wire into a CLI<a class="headerlink" href="#3-wire-into-a-cli" title="Permanent link">&para;</a></h3>
+<h3 id="4-wire-into-a-cli">4) Wire into a CLI<a class="headerlink" href="#4-wire-into-a-cli" title="Permanent link">&para;</a></h3>
 <p>Use <code>FluxCLI</code> to expose your workflow as a single command. CLI flags are auto-generated from your <code>WorkflowInput</code> fields (with types and defaults), so your interface stays consistent with your code.</p>
 <div class="admonition code">
 <p class="admonition-title">Expose Workflow via CLI</p>
@@ -1126,8 +1151,8 @@ Workflows orchestrate retries, timeouts, and overall execution.</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cli</span> <span class="o">=</span> <span class="n">FluxCLI</span><span class="p">()</span>
-    <span class="c1"># Register command name, workflow class/factory, and input model</span>
-    <span class="n">cli</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="s2">&quot;my-workflow&quot;</span><span class="p">,</span> <span class="n">build_workflow</span><span class="p">,</span> <span class="n">MyInput</span><span class="p">)</span>
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">build_workflow</span><span class="p">()</span>
+    <span class="n">cli</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="s2">&quot;my-workflow&quot;</span><span class="p">,</span> <span class="n">wf</span><span class="p">,</span> <span class="n">MyInput</span><span class="p">)</span>
     <span class="n">cli</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </code></pre></div>
 </div>
