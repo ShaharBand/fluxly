@@ -28,15 +28,20 @@ Or clone the repository for development:
 ## 2. Define a Workflow Input
 
 Workflows use **typed inputs** with Pydantic for validation.  
-This allows your CLI commands to be auto-generated with **type hints, defaults, and descriptions**.
+Annotate fields with descriptions and constraints to improve CLI help and validation.
 
-!!! code "Workflow Input Example"
+!!! code "Workflow Input Example (with descriptions and validations)"
     ```python
+    from typing import Annotated
+    
+    from pydantic import Field
     from fluxcli.workflow import WorkflowInput
 
     class MyWorkflowInput(WorkflowInput):
-        message: str = "Hello, FluxCLI!"
-        repeat: int = 3
+        message: Annotated[str, Field(min_length=1, max_length=100, description="Message to print")]
+            = "Hello, FluxCLI!"
+        repeat: Annotated[int, Field(ge=1, le=10, description="How many times to repeat")]
+            = 3
     ```
 
 ---
@@ -131,13 +136,27 @@ Extend nodes with **hooks** for logging, metrics, cleanup, or notifications. Hoo
 
 ## 7. Enable Auto-Generated Documentation
 
-FluxCLI can automatically generate **Markdown documentation** and **DAG diagrams** for your workflows.
+FluxCLI can automatically generate **Markdown documentation** and **DAG diagrams**. Configure it either:
 
-!!! code "Auto Documentation"
+- Programmatically: set defaults in `workflow.inputs`.
+- Via CLI flags: pass at runtime; flags map to `WorkflowInput` fields.
+
+!!! code "Programmatic defaults (set once)"
     ```python
-    workflow.inputs.auto_generate_md = True
-    workflow.inputs.md_file_path = "workflow_doc.md"
-    workflow.inputs.diagram_file_path = "workflow_diagram.png"
+    # Set default documentation behavior on the workflow template
+    workflow.inputs = MyWorkflowInput(
+        auto_generate_md=True,
+        md_file_path="workflow_doc.md",
+        diagram_file_path="workflow_diagram.png",
+    )
+    ```
+
+!!! code "Via CLI flags (override defaults)"
+    ```bash
+    python your_script.py run-demo \
+      --auto-generate-md \
+      --md-file-path workflow_doc.md \
+      --diagram-file-path workflow_diagram.png
     ```
 
 !!! note

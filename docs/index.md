@@ -29,9 +29,9 @@ FluxCLI lets you build and run structured, DAG-based workflows where each workfl
 - **CLI-based actions** – every node has a clear interface for inputs and outputs.
 - **DAG-based workflows** – define arbitrary connections between tasks and their dependencies.
 - **Highly structured workflows** – strict validation ensures safer pipelines, easier debugging, and predictable behavior.
-- **Self-orchestrated nodes** – each graph workflow manages its own execution order, retries, and dependencies.
-- **Lightweight building blocks** – graph workflows are small, self-contained units that can each run in their own environment.
-- **Extensible by design** – wrap graph workflows with your own classes to add logging, metrics, or integrations.
+- **Self-orchestrated nodes** – each node manages its own execution, retries, and dependencies.
+- **Lightweight building blocks** – workflows are small, self-contained units that can each run in their own environment.
+- **Extensible by design** – wrap workflows with your own classes to add logging, metrics, or integrations.
 - **Local-first development** – debug and run workflows as simple CLIs, then scale them seamlessly to CI/CD or external orchestrators.
 
 ---
