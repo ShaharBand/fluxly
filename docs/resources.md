@@ -1,5 +1,3 @@
-## Resources
-
 More about FluxCLI:
 
 - **Repository**: [GitHub](https://github.com/ShaharBand/fluxcli)  
