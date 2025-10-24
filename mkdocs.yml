@@ -11,7 +11,6 @@ theme:
   favicon: imgs/logo.jpg
   
   features:
-  
     - navigation.expand
     - navigation.tabs       
     - navigation.top         
