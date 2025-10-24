@@ -23,7 +23,7 @@ jobs:
         run: pixi install -e dev
 
       - name: Build MkDocs site
-        run: pixi run -e dev mkdocs build
+        run: cd .. && pixi run -e dev mkdocs build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
