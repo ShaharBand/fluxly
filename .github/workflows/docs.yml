@@ -9,9 +9,10 @@ on:
 permissions:
   contents: write 
   pages: write
-  
+  id-token: write
+
 jobs:
-  build-and-deploy:
+  build_mkdocs:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +28,24 @@ jobs:
 
       - name: Build and Deploy MkDocs
         run: pixi run -e dev mkdocs gh-deploy --force
+
+  deploy_mkdocs:
+    needs: build_mkdocs
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
