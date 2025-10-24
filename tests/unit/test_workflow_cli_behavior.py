@@ -1,11 +1,11 @@
 import sys
 import unittest
 
-from flowcli import FlowCLI
-from flowcli.exceptions import DataErrorException
-from flowcli.node import Node
-from flowcli.status import StatusCodes
-from flowcli.workflow import Workflow, WorkflowInput
+from fluxcli import FluxCLI
+from fluxcli.exceptions import DataErrorException
+from fluxcli.node import Node
+from fluxcli.status import StatusCodes
+from fluxcli.workflow import Workflow, WorkflowInput
 
 
 class OkNode(Node):
@@ -18,15 +18,15 @@ class FailNode(Node):
         raise DataErrorException()
 
 
-def _build_cli(cmd_name: str, node: Node) -> FlowCLI:
+def _build_cli(cmd_name: str, node: Node) -> FluxCLI:
     wf = Workflow(name="test-cli-wf", description="cli test workflow", inputs=WorkflowInput(verbose=False))
     wf.add_node(node)
-    cli = FlowCLI()
+    cli = FluxCLI()
     cli.add_command(cmd_name, wf, WorkflowInput)
     return cli
 
 
-class FlowCLICliTest(unittest.TestCase):
+class FluxCLICliTest(unittest.TestCase):
     def setUp(self) -> None:
         self._orig_argv = list(sys.argv)
 

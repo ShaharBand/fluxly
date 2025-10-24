@@ -1,7 +1,7 @@
 from examples.structured_demo.nodes.alpha.node import Alpha
 from examples.structured_demo.nodes.beta.node import Beta
 from examples.structured_demo.workflow.input import DemoWorkflowInput
-from flowcli.core.workflow.workflow import Workflow
+from fluxcli.core.workflow.workflow import Workflow
 
 
 def build_demo_workflow() -> Workflow:

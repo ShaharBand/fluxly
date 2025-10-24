@@ -1,10 +1,10 @@
 import time
 import unittest
 
-from flowcli.exceptions import DataErrorException
-from flowcli.node import Node
-from flowcli.status import StatusCodes
-from flowcli.workflow import Workflow, WorkflowInput
+from fluxcli.exceptions import DataErrorException
+from fluxcli.node import Node
+from fluxcli.status import StatusCodes
+from fluxcli.workflow import Workflow, WorkflowInput
 
 
 class SlowOk(Node):

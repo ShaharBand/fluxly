@@ -2,10 +2,10 @@ import os
 import tempfile
 import unittest
 
-from flowcli.core.docs_generator.generator import generate_workflow_documentation
-from flowcli.core.node.node import Node
-from flowcli.core.workflow.input import WorkflowInput
-from flowcli.core.workflow.workflow import Workflow
+from fluxcli.core.docs_generator.generator import generate_workflow_documentation
+from fluxcli.core.node.node import Node
+from fluxcli.core.workflow.input import WorkflowInput
+from fluxcli.core.workflow.workflow import Workflow
 
 
 class _NoopNode(Node):

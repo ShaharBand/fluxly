@@ -1,10 +1,10 @@
 [project]
-name = "FlowCLI"
+name = "FluxCLI"
 description = "a framework for building and running lightweight directed acyclic graph (DAG)-based workflows, CLI-first design"
 readme = "README.md"
 authors = [{ name = "Shahar Band", email = "shahar1531@gmail.com" }]
 license = { text = "MIT License" }
-keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "flowcli"]
+keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "fluxcli"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -12,14 +12,16 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 version = "0.1.0"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10,<3.14"
 dependencies = [
     "pydantic>=2.10.4,<3",
     "loguru>=0.7.0",
     "diagrams>=0.23.4,<0.24",
-    "typer[all]>=0.20.0,<1",
+    "typer>=0.12.5,<1",
 ]
 
 [build-system]
@@ -37,7 +39,7 @@ build = { features = ["build"], solve-group = "default" }
 [tool.pixi.dependencies]
 python = ">=3.10"
 pydantic = ">=2.10.4,<3"
-loguru = "*"
+loguru = ">=0.7.0"
 diagrams = ">=0.23.4,<0.24"
 typer = ">=0.12.5,<1"
 
@@ -48,6 +50,8 @@ ruff = ">=0.14.1,<0.15"
 mypy = ">=1.18.2,<2"
 pre-commit = ">=4.3.0,<5"
 coverage = ">=7.11.0,<8"
+mkdocs = ">=1.6.0,<2"
+mkdocs-material = ">=9.6.22,<10"
 
 [tool.pixi.feature.build.dependencies]
 twine = ">=6.0.1,<7"
@@ -60,7 +64,7 @@ typecheck = "mypy ."
 coverage = "coverage run -m pytest && coverage report -m"
 
 [tool.hatch.build.targets.wheel]
-packages = ["flowcli"]
+packages = ["fluxcli"]
 
 [tool.mypy]
 strict = true
@@ -117,8 +121,8 @@ ignore = [
     "B904",  # Allow raising exceptions without from e, for HTTPException
 ]
 exclude = [
-    "flowcli/core/workflow/__init__.py",
-    "flowcli/core/node/__init__.py"
+    "fluxcli/core/workflow/__init__.py",
+    "fluxcli/core/node/__init__.py"
 ]
 fixable = ["ALL"]
 unfixable = []
@@ -134,7 +138,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-source = ["flowcli"]
+source = ["fluxcli"]
 dynamic_context = "test_function"
 
 [tool.coverage.report]

@@ -1,11 +1,11 @@
 from examples.structured_demo.workflow.builder import build_demo_workflow
 from examples.structured_demo.workflow.input import DemoWorkflowInput
-from flowcli import FlowCLI
+from fluxcli import FluxCLI
 
 
 def main() -> None:
     wf = build_demo_workflow()
-    cli = FlowCLI()
+    cli = FluxCLI()
     cli.add_command("structured-demo", wf, DemoWorkflowInput)
     cli.run()
 

@@ -1,4 +1,4 @@
-from flowcli.node import NodeExecution
+from fluxcli.node import NodeExecution
 
 from .output import AlphaNodeOutput
 

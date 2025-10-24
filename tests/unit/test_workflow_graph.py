@@ -1,7 +1,7 @@
 import unittest
 
-from flowcli.node import Node
-from flowcli.workflow import WorkflowGraph
+from fluxcli.node import Node
+from fluxcli.workflow import WorkflowGraph
 
 
 class NodeExecutionError(Exception):

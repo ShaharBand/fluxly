@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from flowcli.core.workflow.input import WorkflowInput as CoreWorkflowInput
+from fluxcli.core.workflow.input import WorkflowInput as CoreWorkflowInput
 
 
 class DemoWorkflowInput(CoreWorkflowInput):

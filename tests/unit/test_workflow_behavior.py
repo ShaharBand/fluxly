@@ -1,13 +1,13 @@
 import time
 import unittest
 
-from flowcli.exceptions import (
+from fluxcli.exceptions import (
     DataErrorException,
     TimeoutException,
 )
-from flowcli.node import Node
-from flowcli.status import StatusCodes
-from flowcli.workflow import Workflow, WorkflowInput
+from fluxcli.node import Node
+from fluxcli.status import StatusCodes
+from fluxcli.workflow import Workflow, WorkflowInput
 
 
 class OkNode(Node):
