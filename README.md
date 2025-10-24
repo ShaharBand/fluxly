@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./docs/imgs/logo.png" 
+  <img src="./docs/imgs/logo.jpg" 
        style="max-width: 250px;" 
        alt="FluxCLI Logo" 
        title="FluxCLI Logo">

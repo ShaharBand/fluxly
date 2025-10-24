@@ -7,8 +7,8 @@ docs_dir: docs
 
 theme:
   name: material
-  logo: imgs/logo.png
-  favicon: imgs/logo.png
+  logo: imgs/logo.jpg
+  favicon: imgs/logo.jpg
   
   features:
   
