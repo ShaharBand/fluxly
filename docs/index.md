@@ -127,5 +127,3 @@ Run it:
 
 - Getting started: project layout, environment, and running the included demo — [Getting started](getting-started.md)  
 - Core concepts: workflows, nodes, execution groups, orchestration controls, and node-to-node communication — [Core concepts](concepts.md)  
-- Lifecycle and reliability: hooks, exceptions and exit codes, timeouts and retries — [Lifecycle hooks](hooks.md) · [Exceptions](exceptions.md)  
-- Reference: CLI flags and typed executions for stricter modeling and tooling — [CLI flags](cli-flags.md) · [Typed executions](typed-executions.md)
