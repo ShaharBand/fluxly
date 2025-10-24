@@ -23,7 +23,7 @@ jobs:
         run: pixi --version
 
       - name: Install dev environment
-        run: pixi install dev
+        run: pixi install -e dev
 
       - name: Serve MkDocs site
         run: pixi run docs-serve --host 0.0.0.0 --port 8000
