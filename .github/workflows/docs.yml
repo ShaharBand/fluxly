@@ -1,11 +1,14 @@
-name: Build & Deploy Docs
+name: Deploy Docs
 
 on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
-  deploy-docs:
+  build-docs:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,11 +19,11 @@ jobs:
           curl -fsSL https://pixi.sh/install.sh | bash
           echo "$HOME/.pixi/bin" >> $GITHUB_PATH
 
-      - name: Setup Pixi environment
+      - name: Setup Pixi dev environment
         run: pixi install -e dev
 
       - name: Build MkDocs site
-        run: pixi run -e dev docs-build
+        run: pixi run -e dev mkdocs build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
