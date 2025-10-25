@@ -28,7 +28,7 @@ This eliminates manual parsing and ensures **consistent interfaces across script
             self._logger.info(f"Message: {self.workflow_input.message}")
 
     app = Fluxly()
-    app.add_endpoint("echo-msg", lambda: Workflow("echo-demo"), MyInput)
+    app.add_endpoint("echo-msg", workflow, MyInput)
     app.run()  # CLI, API, or environment triggers
     ```
 
