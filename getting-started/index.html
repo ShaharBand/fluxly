@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Lightweight, CLI-first framework for DAG-based workfluxs">
+        <meta name="description" content="Framework for portable, self-contained DAG workflows, decoupled from orchestration.">
       
       
       
-        <link rel="canonical" href="https://shaharband.github.io/fluxcli/getting-started/">
+        <link rel="canonical" href="https://shaharband.github.io/fluxly/getting-started/">
       
       
         <link rel="prev" href="../features/">
@@ -19,12 +19,12 @@
         <link rel="next" href="../concepts/">
       
       
-      <link rel="icon" href="../imgs/logo.jpg">
+      <link rel="icon" href="../imgs/logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
     
     
       
-        <title>Getting started - FluxCLI</title>
+        <title>Getting started - Fluxly</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-with-fluxcli" class="md-skip">
+        <a href="#getting-started-with-fluxly" class="md-skip">
           Skip to content
         </a>
       
@@ -80,9 +80,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="FluxCLI" class="md-header__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-header__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -93,7 +93,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            FluxCLI
+            Fluxly
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -155,13 +155,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
       </div>
@@ -185,18 +185,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
   
   
-  FluxCLI
+    
+  
+  Fluxly
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -249,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli-flags/" class="md-tabs__link">
+        <a href="../input-flags/" class="md-tabs__link">
           
   
   
@@ -323,22 +322,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="FluxCLI" class="md-nav__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-nav__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
-    FluxCLI
+    Fluxly
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
     </div>
@@ -351,71 +350,18 @@
   
   
   
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    FluxCLI
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            FluxCLI
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Overview
+    Fluxly
     
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -547,9 +493,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-install-fluxcli" class="md-nav__link">
+  <a href="#1-install-fluxly" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Install FluxCLI
+      1. Install Fluxly
     </span>
   </a>
   
@@ -583,11 +529,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-execute-the-workflow-via-cli" class="md-nav__link">
+  <a href="#5-execute-the-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Execute the Workflow via CLI
+      5. Execute the Workflow
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5. Execute the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-your-entrypoint-explicitly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose your entrypoint explicitly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-fastapiuvicorn-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the FastAPI/Uvicorn server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -732,12 +702,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-flags/" class="md-nav__link">
+      <a href="../input-flags/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    CLI flags
+    Input flags
     
   </span>
   
@@ -955,9 +925,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-install-fluxcli" class="md-nav__link">
+  <a href="#1-install-fluxly" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Install FluxCLI
+      1. Install Fluxly
     </span>
   </a>
   
@@ -991,11 +961,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-execute-the-workflow-via-cli" class="md-nav__link">
+  <a href="#5-execute-the-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      5. Execute the Workflow via CLI
+      5. Execute the Workflow
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5. Execute the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-your-entrypoint-explicitly" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose your entrypoint explicitly
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-fastapiuvicorn-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the FastAPI/Uvicorn server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1045,41 +1039,41 @@
   
 
 
-<h1 id="getting-started-with-fluxcli">Getting Started with FluxCLI<a class="headerlink" href="#getting-started-with-fluxcli" title="Permanent link">&para;</a></h1>
-<p>FluxCLI lets you <strong>quickly design, run, and manage DAG-based workflows</strong> using <strong>Python and CLI commands</strong>.<br />
-This guide walks you through creating your first workflow, adding nodes, handling inputs, and executing it via the CLI.</p>
+<h1 id="getting-started-with-fluxly">Getting Started with Fluxly<a class="headerlink" href="#getting-started-with-fluxly" title="Permanent link">&para;</a></h1>
+<p>Fluxly lets you <strong>quickly design, run, and manage DAG-based workflows</strong>.<br />
+Workflows can be triggered via <strong>CLI, API, or environment variables</strong>, so the same workflow works in any context.<br />
+This guide walks you through creating your first workflow, adding nodes, handling inputs, and executing it through your chosen entrypoint.</p>
 <hr />
-<h2 id="1-install-fluxcli">1. Install FluxCLI<a class="headerlink" href="#1-install-fluxcli" title="Permanent link">&para;</a></h2>
+<h2 id="1-install-fluxly">1. Install Fluxly<a class="headerlink" href="#1-install-fluxly" title="Permanent link">&para;</a></h2>
 <p>Install via pip:</p>
 <div class="admonition code">
 <p class="admonition-title">Install via pip</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fluxcli
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>fluxly
 </code></pre></div>
 </div>
 <p>Or clone the repository for development:</p>
 <div class="admonition code">
 <p class="admonition-title">Clone for development</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-repo/fluxcli.git
-<span class="nb">cd</span><span class="w"> </span>fluxcli
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-repo/fluxly.git
+<span class="nb">cd</span><span class="w"> </span>fluxly
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 </div>
 <hr />
 <h2 id="2-define-a-workflow-input">2. Define a Workflow Input<a class="headerlink" href="#2-define-a-workflow-input" title="Permanent link">&para;</a></h2>
 <p>Workflows use <strong>typed inputs</strong> with Pydantic for validation.<br />
-Annotate fields with descriptions and constraints to improve CLI help and validation.</p>
+These inputs can be provided via <strong>CLI flags, API payloads, or environment variables</strong>, keeping your workflows flexible and consistent.<br />
+Annotate fields with descriptions and constraints to improve validation and automatically generate help text for any entrypoint.</p>
 <div class="admonition code">
-<p class="admonition-title">Workflow Input Example (with descriptions and validations)</p>
+<p class="admonition-title">Workflow Input Example</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyWorkflowInput</span><span class="p">(</span><span class="n">WorkflowInput</span><span class="p">):</span>
-    <span class="n">message</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Message to print&quot;</span><span class="p">)]</span>
-        <span class="o">=</span> <span class="s2">&quot;Hello, FluxCLI!&quot;</span>
-    <span class="n">repeat</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;How many times to repeat&quot;</span><span class="p">)]</span>
-        <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Message to print&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;Hello, Fluxly!&quot;</span>
+    <span class="n">repeat</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;How many times to repeat&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">3</span>
 </code></pre></div>
 </div>
 <hr />
@@ -1087,7 +1081,7 @@ Annotate fields with descriptions and constraints to improve CLI help and valida
 <p>Nodes encapsulate <strong>single units of work</strong>. Each node receives the workflow input and communicates results via <strong>typed outputs</strong>, avoiding ad-hoc dictionaries or positional references.</p>
 <div class="admonition code">
 <p class="admonition-title">Node Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PrintNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="nd">@property</span>
@@ -1104,7 +1098,7 @@ Annotate fields with descriptions and constraints to improve CLI help and valida
 <p>Create a workflow, add nodes, and define their dependencies.</p>
 <div class="admonition code">
 <p class="admonition-title">Assemble Workflow</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
 
 <span class="n">workflow</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo-workflow&quot;</span><span class="p">)</span>
 
@@ -1120,21 +1114,92 @@ Annotate fields with descriptions and constraints to improve CLI help and valida
 </code></pre></div>
 </div>
 <hr />
-<h2 id="5-execute-the-workflow-via-cli">5. Execute the Workflow via CLI<a class="headerlink" href="#5-execute-the-workflow-via-cli" title="Permanent link">&para;</a></h2>
-<p>FluxCLI automatically generates CLI commands based on your workflow and input class.</p>
+<h2 id="5-execute-the-workflow">5. Execute the Workflow<a class="headerlink" href="#5-execute-the-workflow" title="Permanent link">&para;</a></h2>
+<p>Fluxly exposes your workflow as a <strong>entrypoint</strong> that can be triggered via <strong>CLI, API, or environment variables</strong>.<br />
+Your <code>WorkflowInput</code> is the single source of truth for both <strong>CLI flags</strong> and <strong>API payload</strong> validation.</p>
 <div class="admonition code">
-<p class="admonition-title">CLI Execution</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli</span><span class="w"> </span><span class="kn">import</span> <span class="n">FluxCLI</span>
+<p class="admonition-title">Execute Workflow</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fluxly</span>
 
-<span class="n">cli</span> <span class="o">=</span> <span class="n">FluxCLI</span><span class="p">()</span>
-<span class="n">cli</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="s2">&quot;run-demo&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">workflow</span><span class="p">,</span> <span class="n">MyWorkflowInput</span><span class="p">)</span>
-<span class="n">cli</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Fluxly</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_endpoint</span><span class="p">(</span><span class="s2">&quot;run-demo&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="p">,</span> <span class="n">MyWorkflowInput</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># auto: CLI if args present, otherwise API server</span>
 </code></pre></div>
 </div>
-<p>Run from terminal:</p>
+<p>Run from the terminal (CLI example):</p>
 <div class="admonition code">
-<p class="admonition-title">Run from terminal</p>
+<p class="admonition-title">Run CLI</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>your_script.py<span class="w"> </span>run-demo<span class="w"> </span>--message<span class="w"> </span><span class="s2">&quot;Hi there!&quot;</span><span class="w"> </span>--repeat<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+</div>
+<p>Trigger via <strong>HTTP POST request</strong>:</p>
+<div class="admonition code">
+<p class="admonition-title">Run via API</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/run-demo/run&quot;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+</div>
+<p>Trigger via <strong>environment variables</strong> (with <code>FLUXLY_</code> prefix to avoid collisions):</p>
+<div class="admonition code">
+<p class="admonition-title">Run via Environment Variables</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_MESSAGE</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_REPEAT</span><span class="o">=</span><span class="m">5</span>
+python<span class="w"> </span>your_script.py<span class="w"> </span>run-demo
+</code></pre></div>
+</div>
+<h3 id="choose-your-entrypoint-explicitly">Choose your entrypoint explicitly<a class="headerlink" href="#choose-your-entrypoint-explicitly" title="Permanent link">&para;</a></h3>
+<p>Use one of the following based on your deployment context:</p>
+<ul>
+<li><code>app.run()</code> — auto-selects: runs CLI when arguments are provided, otherwise starts the API server.</li>
+<li><code>app.run_cli()</code> — force CLI mode.</li>
+<li><code>app.run_api()</code> — force API server.</li>
+</ul>
+<div class="admonition code">
+<p class="admonition-title">Explicit run modes</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fluxly</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Fluxly</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_endpoint</span><span class="p">(</span><span class="s2">&quot;run-demo&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="p">,</span> <span class="n">MyWorkflowInput</span><span class="p">)</span>
+
+<span class="c1"># Force CLI</span>
+<span class="c1"># app.run_cli()</span>
+
+<span class="c1"># Force API</span>
+<span class="c1"># app.run_api()</span>
+</code></pre></div>
+</div>
+<h3 id="configure-the-fastapiuvicorn-server">Configure the FastAPI/Uvicorn server<a class="headerlink" href="#configure-the-fastapiuvicorn-server" title="Permanent link">&para;</a></h3>
+<p>You can pass FastAPI and Uvicorn settings via <code>ApiConfig</code> and <code>app.configure_api()</code>.</p>
+<div class="admonition code">
+<p class="admonition-title">API configuration</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fluxly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.api.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiConfig</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Fluxly</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_endpoint</span><span class="p">(</span><span class="s2">&quot;run-demo&quot;</span><span class="p">,</span> <span class="n">workflow</span><span class="p">,</span> <span class="n">MyWorkflowInput</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">configure_api</span><span class="p">(</span>
+    <span class="n">ApiConfig</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="mi">9000</span><span class="p">,</span>
+        <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">,</span>
+        <span class="n">fastapi_kwargs</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;docs_url&quot;</span><span class="p">:</span> <span class="s2">&quot;/docs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;openapi_url&quot;</span><span class="p">:</span> <span class="s2">&quot;/openapi.json&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">uvicorn_kwargs</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;reload&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># any other uvicorn.run kwargs</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">run_api</span><span class="p">()</span>
 </code></pre></div>
 </div>
 <hr />
@@ -1161,10 +1226,11 @@ Annotate fields with descriptions and constraints to improve CLI help and valida
 </div>
 <hr />
 <h2 id="7-enable-auto-generated-documentation">7. Enable Auto-Generated Documentation<a class="headerlink" href="#7-enable-auto-generated-documentation" title="Permanent link">&para;</a></h2>
-<p>FluxCLI can automatically generate <strong>Markdown documentation</strong> and <strong>DAG diagrams</strong>. Configure it either:</p>
+<p>Fluxly can automatically generate <strong>Markdown documentation</strong> and <strong>DAG diagrams</strong>.<br />
+You can configure this either:</p>
 <ul>
-<li>Programmatically: set defaults in <code>workflow.inputs</code>.</li>
-<li>Via CLI flags: pass at runtime; flags map to <code>WorkflowInput</code> fields.</li>
+<li><strong>Programmatically</strong>: set defaults in <code>workflow.inputs</code>.</li>
+<li><strong>At runtime</strong>: provide flags, API payloads, or environment variables; all map to <code>WorkflowInput</code> fields.</li>
 </ul>
 <div class="admonition code">
 <p class="admonition-title">Programmatic defaults (set once)</p>
@@ -1176,18 +1242,44 @@ Annotate fields with descriptions and constraints to improve CLI help and valida
 <span class="p">)</span>
 </code></pre></div>
 </div>
+<p>Run from the terminal (CLI example):</p>
 <div class="admonition code">
-<p class="admonition-title">Via CLI flags (override defaults)</p>
+<p class="admonition-title">Override via CLI flags</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>your_script.py<span class="w"> </span>run-demo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--auto-generate-md<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--md-file-path<span class="w"> </span>workflow_doc.md<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--diagram-file-path<span class="w"> </span>workflow_diagram.png
 </code></pre></div>
 </div>
+<p>Trigger via <strong>API POST request</strong>:</p>
+<div class="admonition code">
+<p class="admonition-title">Override via API</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/run-demo/run&quot;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;auto_generate_md&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;md_file_path&quot;</span><span class="p">:</span> <span class="s2">&quot;workflow_doc.md&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;diagram_file_path&quot;</span><span class="p">:</span> <span class="s2">&quot;workflow_diagram.png&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+</div>
+<p>Trigger via <strong>environment variables</strong> (with <code>FLUXLY_</code> prefix):</p>
+<div class="admonition code">
+<p class="admonition-title">Override via Environment Variables</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_AUTO_GENERATE_MD</span><span class="o">=</span><span class="m">1</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_MD_FILE_PATH</span><span class="o">=</span><span class="s2">&quot;workflow_doc.md&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_DIAGRAM_FILE_PATH</span><span class="o">=</span><span class="s2">&quot;workflow_diagram.png&quot;</span>
+python<span class="w"> </span>your_script.py<span class="w"> </span>run-demo
+</code></pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>At the end of execution, FluxCLI outputs a <strong>readable summary</strong> and a <strong>diagram</strong> of the workflow.<br />
-Useful for <strong>reviews, knowledge sharing, and onboarding new developers</strong>.</p>
+<p>At the end of execution, Fluxly outputs a <strong>readable summary</strong> and a <strong>diagram</strong> of the workflow.<br />
+This is useful for <strong>reviews, knowledge sharing, and onboarding new developers</strong>.</p>
 </div>
 <hr />
 <h2 id="8-next-steps">8. Next Steps<a class="headerlink" href="#8-next-steps" title="Permanent link">&para;</a></h2>
@@ -1199,7 +1291,7 @@ Useful for <strong>reviews, knowledge sharing, and onboarding new developers</st
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Once you are comfortable with the basics, you can start building <strong>production-ready pipelines</strong> using FluxCLI, scaling from <strong>local scripts to distributed workflows</strong>.</p>
+<p>Once you are comfortable with the basics, you can start building <strong>production-ready pipelines</strong> using Fluxly, scaling from <strong>local scripts to distributed workflows</strong>.</p>
 </div>
 
 

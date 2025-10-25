@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Lightweight, CLI-first framework for DAG-based workfluxs">
+        <meta name="description" content="Framework for portable, self-contained DAG workflows, decoupled from orchestration.">
       
       
       
-        <link rel="canonical" href="https://shaharband.github.io/fluxcli/concepts/">
+        <link rel="canonical" href="https://shaharband.github.io/fluxly/concepts/">
       
       
         <link rel="prev" href="../getting-started/">
@@ -19,12 +19,12 @@
         <link rel="next" href="../demo/">
       
       
-      <link rel="icon" href="../imgs/logo.jpg">
+      <link rel="icon" href="../imgs/logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
     
     
       
-        <title>Core concepts - FluxCLI</title>
+        <title>Core concepts - Fluxly</title>
       
     
     
@@ -80,9 +80,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="FluxCLI" class="md-header__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-header__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -93,7 +93,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            FluxCLI
+            Fluxly
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -155,13 +155,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
       </div>
@@ -185,18 +185,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
   
   
-  FluxCLI
+    
+  
+  Fluxly
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -249,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli-flags/" class="md-tabs__link">
+        <a href="../input-flags/" class="md-tabs__link">
           
   
   
@@ -323,22 +322,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="FluxCLI" class="md-nav__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-nav__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
-    FluxCLI
+    Fluxly
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
     </div>
@@ -351,71 +350,18 @@
   
   
   
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    FluxCLI
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            FluxCLI
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Overview
+    Fluxly
     
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -737,12 +683,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-flags/" class="md-nav__link">
+      <a href="../input-flags/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    CLI flags
+    Input flags
     
   </span>
   
@@ -1059,7 +1005,7 @@
 
   <h1>Core concepts</h1>
 
-<p>FluxCLI revolves around a few central abstractions that let you build <strong>typed, maintainable, and DAG-based workflows</strong>.</p>
+<p>Fluxly revolves around a few central abstractions that let you build <strong>typed, maintainable, and DAG-based workflows</strong>.</p>
 <hr />
 <h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
 <p>A <code>Workflow</code> represents a <strong>DAG of nodes</strong>, including metadata, inputs, execution history, and orchestration logic.</p>
@@ -1074,7 +1020,7 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">Workflow Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
 
 <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo-workflow&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Demo workflow&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -1086,13 +1032,13 @@
 <p class="admonition-title">Typed Inputs</p>
 <ul>
 <li>Uses Pydantic for validation.</li>
-<li>Drives <strong>CLI auto-generation</strong>, including flags, defaults, and type hints.</li>
+<li>Drives <strong>CLI flag generation and API payload validation</strong>, including defaults, type hints, and descriptions.</li>
 <li>Accessible to all nodes via <code>self.workflow_input</code>.</li>
 </ul>
 </div>
 <div class="admonition code">
 <p class="admonition-title">WorkflowInput Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkflowInput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyInput</span><span class="p">(</span><span class="n">WorkflowInput</span><span class="p">):</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span>
@@ -1113,7 +1059,7 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">Node Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PrintNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="nd">@property</span>
@@ -1133,7 +1079,7 @@
 <p>Each node typically lives in its own file; import node classes and create instances in the workflow.</p>
 <div class="admonition code">
 <p class="admonition-title">producer.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeOutput</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeOutput</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ProducerOutput</span><span class="p">(</span><span class="n">NodeOutput</span><span class="p">):</span>
     <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1151,7 +1097,7 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">consumer.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">producer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
 
@@ -1165,7 +1111,7 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">workflow.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">producer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">consumer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Consumer</span>
@@ -1181,8 +1127,8 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">Conditional edge based on upstream status</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusCodes</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.status</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusCodes</span>
 
 <span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">)</span>
 <span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;producer&quot;</span><span class="p">)</span>
@@ -1264,7 +1210,7 @@
 <p>This enables <strong>consistent cross-cutting behavior</strong> without modifying core business logic.</p>
 <hr />
 <h2 id="lifecycle-hooks">Lifecycle Hooks<a class="headerlink" href="#lifecycle-hooks" title="Permanent link">&para;</a></h2>
-<p>FluxCLI nodes provide <strong>lifecycle hooks</strong> that let you add custom behavior at key points of execution without modifying <code>_logic()</code>.  </p>
+<p>Fluxly nodes provide <strong>lifecycle hooks</strong> that let you add custom behavior at key points of execution without modifying <code>_logic()</code>.  </p>
 <div class="admonition note">
 <p class="admonition-title">Available Hooks</p>
 <ul>
@@ -1276,7 +1222,7 @@
 </div>
 <div class="admonition code">
 <p class="admonition-title">Hooks Example</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">my_input</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyInput</span>
 
@@ -1303,7 +1249,7 @@
 </div>
 <hr />
 <h2 id="nodeexecution-workflowexecution">NodeExecution &amp; WorkflowExecution<a class="headerlink" href="#nodeexecution-workflowexecution" title="Permanent link">&para;</a></h2>
-<p>FluxCLI allows you to <strong>customize the execution structure</strong> by overriding how executions, outputs, and metadata are created.<br />
+<p>Fluxly allows you to <strong>customize the execution structure</strong> by overriding how executions, outputs, and metadata are created.<br />
 This lets you inject custom behavior, logging, or extended data without modifying the core node logic.</p>
 <p><strong>Default Execution Structure:</strong></p>
 <ul>
@@ -1329,7 +1275,7 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 <div class="admonition code">
 <p class="admonition-title">custom_execution.py</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeMetadata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeMetadata</span>
 
 <span class="c1"># Custom output for this node</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeOutput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1344,7 +1290,7 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 <p>Using Custom Execution:</p>
 <div class="admonition code">
 <p class="admonition-title">custom_node.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxcli.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">CustomNodeExecution</span><span class="o">,</span><span class="w"> </span><span class="nn">CustomNodeOutput</span>
 

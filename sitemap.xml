@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://shaharband.github.io/fluxcli/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/cli-flags/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/concepts/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/concepts/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/demo/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/demo/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/exceptions/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/exceptions/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/features/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/features/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/getting-started/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/getting-started/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/input-flags/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/people/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/people/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
     <url>
-         <loc>https://shaharband.github.io/fluxcli/resources/</loc>
-         <lastmod>2025-10-24</lastmod>
+         <loc>https://shaharband.github.io/fluxly/resources/</loc>
+         <lastmod>2025-10-25</lastmod>
     </url>
 </urlset>

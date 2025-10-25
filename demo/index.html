@@ -6,25 +6,25 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Lightweight, CLI-first framework for DAG-based workfluxs">
+        <meta name="description" content="Framework for portable, self-contained DAG workflows, decoupled from orchestration.">
       
       
       
-        <link rel="canonical" href="https://shaharband.github.io/fluxcli/demo/">
+        <link rel="canonical" href="https://shaharband.github.io/fluxly/demo/">
       
       
         <link rel="prev" href="../concepts/">
       
       
-        <link rel="next" href="../cli-flags/">
+        <link rel="next" href="../input-flags/">
       
       
-      <link rel="icon" href="../imgs/logo.jpg">
+      <link rel="icon" href="../imgs/logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
     
     
       
-        <title>Demo - FluxCLI</title>
+        <title>Demo - Fluxly</title>
       
     
     
@@ -65,6 +65,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#structured-demo" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -75,9 +80,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="FluxCLI" class="md-header__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-header__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -88,7 +93,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            FluxCLI
+            Fluxly
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -150,13 +155,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
       </div>
@@ -180,18 +185,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
   
   
-  FluxCLI
+    
+  
+  Fluxly
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -244,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli-flags/" class="md-tabs__link">
+        <a href="../input-flags/" class="md-tabs__link">
           
   
   
@@ -318,22 +322,22 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="FluxCLI" class="md-nav__button md-logo" aria-label="FluxCLI" data-md-component="logo">
+    <a href=".." title="Fluxly" class="md-nav__button md-logo" aria-label="Fluxly" data-md-component="logo">
       
-  <img src="../imgs/logo.jpg" alt="logo">
+  <img src="../imgs/logo.png" alt="logo">
 
     </a>
-    FluxCLI
+    Fluxly
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/ShaharBand/fluxcli" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/ShaharBand/fluxly" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    ShaharBand/fluxcli
+    ShaharBand/fluxly
   </div>
 </a>
     </div>
@@ -346,71 +350,18 @@
   
   
   
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    FluxCLI
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            FluxCLI
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Overview
+    Fluxly
     
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -544,6 +495,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -621,12 +574,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-flags/" class="md-nav__link">
+      <a href="../input-flags/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    CLI flags
+    Input flags
     
   </span>
   
@@ -834,6 +787,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -852,20 +807,38 @@
   
 
 
-  <h1>Demo</h1>
-
-<p>FluwCLI includes a <strong>structured demo</strong> showcasing how to register and run workflows through the CLI.</p>
+<h1 id="structured-demo">Structured Demo<a class="headerlink" href="#structured-demo" title="Permanent link">&para;</a></h1>
+<p>Fluxly includes a <strong>structured demo</strong> showcasing how to register and run workflows through the framework.</p>
 <div class="admonition note">
 <p class="admonition-title">Entry Point</p>
-<p>Located at: <code>examples/structured_demo/cli/app.py</code></p>
+<p>Located at: <code>examples/structured_demo/app.py</code></p>
 </div>
-<p>You can run the demo command directly from the terminal:</p>
+<p>Run the demo from the terminal (CLI):</p>
 <div class="admonition code">
 <p class="admonition-title">Code</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/structured_demo/cli/app.py<span class="w"> </span>structured-demo<span class="w"> </span><span class="o">[</span>--flags<span class="o">]</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/structured_demo/app.py<span class="w"> </span>structured-demo<span class="w"> </span><span class="o">[</span>--flags<span class="o">]</span>
 </code></pre></div>
 </div>
-<p>This example demonstrates how workflows, nodes, and inputs integrate under the framework.</p>
+<p>Trigger the workflow via an <strong>HTTP POST request</strong>:</p>
+<div class="admonition code">
+<p class="admonition-title">API POST Example</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/structured-demo/run&quot;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, structured demo!&quot;</span><span class="p">}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+</div>
+<p>Or trigger it via <strong>environment variables</strong> (with <code>FLUXLY_</code> prefix to avoid collisions):</p>
+<div class="admonition code">
+<p class="admonition-title">Environment Variables Example</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">FLUXLY_MESSAGE</span><span class="o">=</span><span class="s2">&quot;Hello, structured demo!&quot;</span>
+python<span class="w"> </span>examples/structured_demo/app.py<span class="w"> </span>structured-demo
+</code></pre></div>
+</div>
+<p>This example demonstrates how <strong>workflows, nodes, and typed inputs</strong> integrate under the framework, whether run via <strong>CLI, API, or environment variables</strong>.</p>
 
 
 
