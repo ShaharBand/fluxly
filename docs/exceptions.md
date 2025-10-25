@@ -55,6 +55,6 @@ Always set an **exit code** using a `StatusCodes` Enum value to ensure consisten
     ```
 
 !!! note "Rules for Custom Exceptions"
-- Exit codes must be **validated integers (0–255)**.  
-- Raising a `WorkflowException` marks the **current node attempt** with that status.  
-- Workflow execution propagates the **consistent status and exit code** downstream, whether running via **CLI, API, or environment variables**.
+    - Exit codes must be **validated integers (0–255)**.  
+    - Raising a `WorkflowException` marks the **current node attempt** with that status.  
+    - Workflow execution propagates the **consistent status and exit code** downstream, whether running via **CLI, API, or environment variables**.

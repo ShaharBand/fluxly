@@ -19,7 +19,7 @@ Or clone the repository for development:
 
 !!! code "Clone for development"
     ```bash
-    git clone https://github.com/your-repo/fluxly.git
+    git clone https://github.com/ShaharBand/fluxly.git
     cd fluxly
     pip install -e .
     ```
