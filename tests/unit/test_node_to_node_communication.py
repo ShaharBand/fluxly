@@ -1,8 +1,8 @@
 import unittest
 
-from fluxcli.node import Node, NodeExecution, NodeOutput
-from fluxcli.status import StatusCodes
-from fluxcli.workflow import Workflow, WorkflowInput
+from fluxly.node import Node, NodeExecution, NodeOutput
+from fluxly.status import StatusCodes
+from fluxly.workflow import Workflow, WorkflowInput
 
 
 class ProducerOutput(NodeOutput):

@@ -1,17 +1,20 @@
-FluxCLI is a **CLI-first framework** for designing, running, and shipping DAG-based workflows with **strong typing, lifecycle hooks, and maintainable code structure**. It’s built for developers who want **predictable, debuggable, and production-ready workflows**.
+# Fluxly — Flexible, Typed DAG Workflows
+
+Fluxly is a **flexible framework** for designing, running, and shipping **DAG-based workflows** with **strong typing, lifecycle hooks, and maintainable code structure**.  
+It’s built for developers who want **predictable, debuggable, and production-ready workflows** that can be triggered via **CLI, API, or environment variables**.
 
 ---
 
-## CLI-first, strongly typed
+## Consistent, Strongly Typed Interfaces
 
-Each workflow becomes a CLI command. Flags are auto-generated from your `WorkflowInput` types, including **type hints, defaults, and descriptions**.  
+Each workflow exposes a **consistent entrypoint**. Inputs from your `WorkflowInput` class are automatically mapped to **CLI flags, API payloads, or environment variables**, including **type hints, defaults, and descriptions**.  
 This eliminates manual parsing and ensures **consistent interfaces across scripts and production pipelines**.
 
-!!! code "CLI Example"
+!!! code "EntryPoint Example"
     ```python
-    from fluxcli import FluxCLI
-    from fluxcli.workflow import Workflow, WorkflowInput
-    from fluxcli.node import Node
+    from fluxly import Fluxly
+    from fluxly.workflow import Workflow, WorkflowInput
+    from fluxly.node import Node
 
     class MyInput(WorkflowInput):
         message: str = "hello"
@@ -24,17 +27,17 @@ This eliminates manual parsing and ensures **consistent interfaces across script
         def _logic(self) -> None:
             self._logger.info(f"Message: {self.workflow_input.message}")
 
-    cli = FluxCLI()
-    cli.add_command("echo-msg", lambda: Workflow("echo-demo"), MyInput)
-    cli.run()
+    app = Fluxly()
+    app.add_endpoint("echo-msg", lambda: Workflow("echo-demo"), MyInput)
+    app.run()  # CLI, API, or environment triggers
     ```
 
 ---
 
-## Modern Python throughout
+## Modern Python Throughout
 
 Workflows and nodes are implemented using **idiomatic Python classes and type annotations**.  
-No DSLs or YAML schemas are required—use **Pydantic** for input validation and serialization.
+No DSLs or YAML schemas—use **Pydantic** for input validation and serialization.
 
 !!! code "Type-safe Node Example"
     ```python
@@ -53,17 +56,17 @@ No DSLs or YAML schemas are required—use **Pydantic** for input validation and
 
 ---
 
-## Node-to-node communication
+## Node-to-Node Communication
 
 Nodes communicate via **typed execution classes**, either by:
-- Importing and referencing the upstream node instance after it ran
-- Using a **conditional edge** that checks upstream `last_execution`
+- Importing and referencing the upstream node instance after it runs.
+- Using **conditional edges** based on upstream status.
 
-Each node typically lives in its own file; import node classes and create instances in the workflow.
+Nodes typically live in their own files; import node classes and create instances in the workflow.
 
 !!! code "producer.py"
     ```python
-    from fluxcli.node import Node, NodeExecution, NodeOutput
+    from fluxly.node import Node, NodeExecution, NodeOutput
 
     class ProducerOutput(NodeOutput):
         value: int | None = None
@@ -81,8 +84,7 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "consumer.py"
     ```python
-    from fluxcli.node import Node
-
+    from fluxly.node import Node
     from producer import Producer
 
     class Consumer(Node):
@@ -95,8 +97,7 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "workflow.py"
     ```python
-    from fluxcli.workflow import Workflow
-
+    from fluxly.workflow import Workflow
     from producer import Producer
     from consumer import Consumer
 
@@ -109,39 +110,16 @@ Each node typically lives in its own file; import node classes and create instan
     wf.add_edge(producer, consumer)
     ```
 
-!!! code "Edge that runs only if source completed"
+!!! code "Conditional edge example"
     ```python
     wf.add_edge_if_source_completed(producer, consumer)
     ```
 
-!!! code "Conditional edge based on upstream status"
-    ```python
-    from fluxcli.workflow import Workflow
-    from fluxcli.status import StatusCodes
-
-    wf = Workflow(name="demo")
-    producer = Producer(name="producer")
-    consumer = Consumer(name="consumer")
-
-    wf.add_node(producer)
-    wf.add_node(consumer)
-
-    # Run consumer only if producer completed successfully and produced a value
-    wf.add_conditional_edge(
-        producer,
-        consumer,
-        condition=lambda: (
-            producer.last_execution.status == StatusCodes.COMPLETED
-            and producer.last_execution.output.value is not None
-        ),
-    )
-    ```
-
 ---
 
-## DAG orchestration with validation and retries
+## DAG Orchestration with Validation and Retries
 
-Workflows are automatically validated as DAGs.  
+Workflows are automatically validated as **DAGs**.  
 Execution respects dependencies and conditional edges.
 
 !!! code "DAG Example"
@@ -156,23 +134,22 @@ Execution respects dependencies and conditional edges.
     wf.add_node(node_b)
     wf.add_node(node_c)
 
-    wf.add_edge(node_a, node_b)  # B runs after A
+    wf.add_edge(node_a, node_b)
     wf.add_conditional_edge(node_b, node_c, condition=lambda: True)
     ```
 
 ---
 
-## Lifecycle hooks
+## Lifecycle Hooks
 
-Add cross-cutting behavior **without touching business logic**.  
-Hooks exist at both **node and workflow levels**:
+Add cross-cutting behavior **without touching business logic**. Hooks exist at **node and workflow levels**:
 
 - `on_start` – before execution  
 - `on_success` – after success  
 - `on_failure` – after failure  
 - `on_finish` – always called
 
-!!! code "Logging Example"
+!!! code "Lifecycle Example"
     ```python
     class Echo(Node):
         def on_start(self) -> None:
@@ -184,16 +161,16 @@ Hooks exist at both **node and workflow levels**:
 
 ---
 
-## Typed exceptions and consistent exit codes
+## Typed Exceptions and Consistent Exit Codes
 
-- Raise **custom exceptions** mapped to `StatusCodes`.
-- CLI and schedulers always receive consistent exit codes.
-- Makes **CI/CD pipelines predictable**.
+- Raise **custom exceptions** mapped to `StatusCodes`.  
+- Entry points (CLI, API, schedulers) receive consistent exit codes.  
+- Ensures **predictable CI/CD pipelines**.
 
 !!! code "Exception Example"
     ```python
-    from fluxcli.exceptions import WorkflowException
-    from fluxcli.status import StatusCodes
+    from fluxly.exceptions import WorkflowException
+    from fluxly.status import StatusCodes
 
     class MyNode(Node):
         def _logic(self) -> None:
@@ -202,9 +179,9 @@ Hooks exist at both **node and workflow levels**:
 
 ---
 
-## Auto-generated documentation and diagrams
+## Auto-Generated Documentation and Diagrams
 
-FluxCLI can generate **Markdown documentation** and **DAG diagrams** automatically.  
+Fluxly can generate **Markdown documentation** and **DAG diagrams** automatically.  
 Helps teams **review workflow structures** and share knowledge.
 
 !!! note "Simple workflow"
@@ -217,16 +194,16 @@ Helps teams **review workflow structures** and share knowledge.
 
 ---
 
-## Extensible architecture
+## Extensible Architecture
 
-- Wrap workflows and nodes to add **logging, metrics, policies, integrations**.
-- Define a **base layer** for shared defaults and configuration.
+- Wrap workflows and nodes to add **logging, metrics, policies, integrations**.  
+- Define a **base layer** for shared defaults and configuration.  
 - Scale from **local scripts to production pipelines** with minimal rewrites.
 
 ---
 
-## Tested and type-checked
+## Tested and Type-Checked
 
-- Unit tests cover workflow behavior.
-- Continuous integration enforces **linting, type-checks, and formatting**.
+- Unit tests cover workflow behavior.  
+- Continuous integration enforces **linting, type-checks, and formatting**.  
 - Strong typing ensures **safe refactors** and long-term maintainability.

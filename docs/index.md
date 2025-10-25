@@ -1,18 +1,30 @@
 <div align="center">
-  <img src="imgs/logo.jpg" alt="FluxCLI Logo" title="FluxCLI Logo" style="max-width: 200px;" />
+  <img src="imgs/logo.png" alt="Fluxly Logo" title="Fluxly Logo" style="max-width: 200px;" />
   
-  <h1>FluxCLI</h1>
-  <p><em>Lightweight, CLI-first framework for building <strong>DAG-based workflows</strong></em></p>
+  <h1>Fluxly</h1>
+  <p>
+    <em>Lightweight framework for portable, self-contained <strong>DAG-based workflows</strong>.
+    </em>
+  </p>
 
   <p>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python 3.10+"></a>
-    <a href="https://github.com/ShaharBand/fluxcli"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License MIT"></a>
+    <a href="https://github.com/ShaharBand/fluxly"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License MIT"></a>
   </p>
 </div>
 
 ---
 
-FluxCLI lets you build and run structured, DAG-based workflows where each workflow becomes a **CLI command**. It's **local-first** for easy debugging and **portable** for orchestration.
+**Fluxly** is a lightweight framework for building and running **directed acyclic graph (DAG)-based workflows**.  
+
+The entire workflow acts as a **self-contained execution endpoint**:
+
+- Run them locally or via CLI commands, API calls, or environment triggers.
+- Package them in containers for portability.
+- Integrate seamlessly with higher-level orchestrators (Argo, Airflow, Prefect, CI/CD) without extra glue code.
+
+With **Fluxly**, pipelines are **highly structured**, enabling safer execution, easier debugging, and better modularity.  
+Workflows can run standalone or as part of a larger system, making **Fluxly** both lightweight and flexible.
 
 ---
 
@@ -26,34 +38,35 @@ FluxCLI lets you build and run structured, DAG-based workflows where each workfl
 
 ## Key Features
 
-- **CLI-based actions** – every node has a clear interface for inputs and outputs.
-- **DAG-based workflows** – define arbitrary connections between tasks and their dependencies.
+- **Flexible entrypoints** – workflows can be triggered via CLI, API calls, or environment variables.
+- **DAG-based workflows** – define arbitrary connections between ndoes and their dependencies.
 - **Highly structured workflows** – strict validation ensures safer pipelines, easier debugging, and predictable behavior.
 - **Self-orchestrated nodes** – each node manages its own execution, retries, and dependencies.
-- **Lightweight building blocks** – workflows are small, self-contained units that can each run in their own environment.
-- **Extensible by design** – wrap workflows with your own classes to add logging, metrics, or integrations.
-- **Local-first development** – debug and run workflows as simple CLIs, then scale them seamlessly to CI/CD or external orchestrators.
+- **Lightweight building blocks** – workflows are self-contained units that can run independently in any environment.
+- **Extensible by design** – wrap workflows with custom classes to add logging, metrics, or integrations.
+- **Local-first development** – debug and run workflows standalone, then scale seamlessly to CI/CD or external orchestrators.
 
 ---
 
 ## Installation
 
-!!! code "Install FluxCLI"
+!!! code "Install Fluxly"
     ```bash
-    pip install fluxcli
+    pip install fluxly
     ```
 
 ---
 
 ## Quick Start
 
-### 1) Define workflow input
+### 1) Define Workflow Input
 
-Create a typed `WorkflowInput`. These fields become CLI flags automatically.
+Define a typed `WorkflowInput` to specify all inputs your workflow expects.  
+These inputs are **agnostic to how the workflow is triggered** — they can come from **CLI flags, API requests, or environment variables** — giving you maximum flexibility.
 
 !!! code "WorkflowInput Example"
     ```python
-    from fluxcli.workflow import WorkflowInput
+    from fluxly.workflow import WorkflowInput
 
     class MyInput(WorkflowInput):
         message: str = "world"
@@ -65,7 +78,7 @@ Implement `Node` logic in `_logic()` and type-narrow `workflow_input` for conven
 
 !!! code "Node Example"
     ```python
-    from fluxcli.node import Node
+    from fluxly.node import Node
 
     class Echo(Node):
         @property
@@ -83,7 +96,7 @@ Workflows orchestrate retries, timeouts, and overall execution.
 
 !!! code "Workflow Example"
     ```python
-    from fluxcli.workflow import Workflow
+    from fluxly.workflow import Workflow
 
     def build_workflow() -> Workflow:
         wf = Workflow(name="demo", description="Demo flow", version="0.1")
@@ -110,31 +123,71 @@ Workflows orchestrate retries, timeouts, and overall execution.
     # Alternatively, run a node only if its parent completed successfully
     wf.add_edge_if_source_completed(alpha, gamma)
     ```
+### 4) Expose Your Workflow
 
-### 4) Wire into a CLI
+Use **Fluxly** to expose your workflow as a single, consistent entrypoint.  
+Inputs from your `WorkflowInput` are automatically mapped to **CLI flags, API payloads, or environment variables**, keeping your interface consistent and type-safe across all triggers.
 
-Use `FluxCLI` to expose your workflow as a single command. CLI flags are auto-generated from your `WorkflowInput` fields (with types and defaults), so your interface stays consistent with your code.
-
-!!! code "Expose Workflow via CLI"
+!!! code "Expose Workflow"
     ```python
-    from fluxcli import FluxCLI
+    from fluxly import Fluxly
 
     if __name__ == "__main__":
-        cli = FluxCLI()
+        app = Fluxly()
         wf = build_workflow()
-        cli.add_command("my-workflow", wf, MyInput)
-        cli.run()
+        # register workflow with its input type
+        app.add_endpoint("my-workflow", wf, MyInput)
+        app.run()  # can be triggered via CLI, API, or env vars
     ```
 
-Run it:
+Run it via CLI:
 
-!!! code "Run the CLI"
+!!! code "Run CLI"
     ```bash
-    python cli.py my-workflow --message hello
+    python main.py my-workflow --message hello
 
     # discover generated flags and help text
-    python cli.py my-workflow --help
+    python main.py my-workflow --help
     ```
+
+Trigger via **HTTP POST request**:
+
+!!! code "Run via API"
+    ```python
+    import requests
+
+    url = "http://localhost:8000/my-workflow/run"
+    payload = {"message": "hello"}
+
+    response = requests.post(url, json=payload)
+    print(response.status_code, response.json())
+    ```
+
+Trigger via **environment variables** (with `FLUXLY_` prefix):
+
+!!! code "Run via Environment Variables"
+    ```bash
+    export FLUXLY_MESSAGE="hello"
+    python main.py my-workflow
+    ```
+
+---
+
+## Generated Entrypoints (CLI and API)
+
+Fluxly auto-generates a CLI menu and API routes per registered workflow.
+
+!!! note "CLI Menu"
+    <div align="center">
+      <img src="imgs/cli_menu.png" alt="Fluxly CLI Menu" title="Fluxly CLI Menu" style="max-width: 700px; width: 100%;" />
+      <p><em>CLI commands generated for your workflows.</em></p>
+    </div>
+
+!!! note "Swagger UI"
+    <div align="center">
+      <img src="imgs/swagger.png" alt="Fluxly Swagger UI" title="Fluxly Swagger UI" style="max-width: 700px; width: 100%;" />
+      <p><em>API endpoints for submitting runs and fetching statuses.</em></p>
+    </div>
 
 ---
 

@@ -1,14 +1,14 @@
-site_name: FluxCLI
-site_url: https://shaharband.github.io/fluxcli/
-site_description: Lightweight, CLI-first framework for DAG-based workfluxs
-repo_url: https://github.com/ShaharBand/fluxcli
-repo_name: ShaharBand/fluxcli
+site_name: Fluxly
+site_url: https://shaharband.github.io/fluxly/
+site_description: Framework for portable, self-contained DAG workflows, decoupled from orchestration.
+repo_url: https://github.com/ShaharBand/fluxly
+repo_name: ShaharBand/fluxly
 docs_dir: docs
 
 theme:
   name: material
-  logo: imgs/logo.jpg
-  favicon: imgs/logo.jpg
+  logo: imgs/logo.png
+  favicon: imgs/logo.png
   
   features:
     - navigation.expand
@@ -36,15 +36,14 @@ markdown_extensions:
   - pymdownx.inlinehilite
 
 nav:
-  - FluxCLI:
-      - Overview: index.md
+  - Fluxly: index.md
   - Features: features.md
   - Learn:
       - Getting started: getting-started.md
       - Core concepts: concepts.md
       - Demo: demo.md
   - Reference:
-      - CLI flags: cli-flags.md
+      - Input flags: input-flags.md
       - Exceptions: exceptions.md
   - People:
       - Maintainers: people.md

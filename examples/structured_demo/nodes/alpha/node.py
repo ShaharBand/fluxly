@@ -1,7 +1,7 @@
 
 from examples.structured_demo.nodes.alpha.execution import AlphaNodeExecution
 from examples.structured_demo.workflow.input import DemoWorkflowInput
-from fluxcli.core.node.node import Node
+from fluxly.core.node.node import Node
 
 
 class Alpha(Node):

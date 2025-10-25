@@ -1,9 +1,11 @@
-FluxCLI provides **typed exceptions** to give precise **exit-code and status control**.  
-Raise these inside nodes (or workflows) to set both **runtime status** and **process exit code** consistently.
+# Typed Exceptions and Consistent Status Codes
+
+Fluxly provides **typed exceptions** to give precise **exit-code and status control**.  
+Raise these inside nodes (or workflows) to set both **runtime status** and **process exit code** consistently, regardless of whether the workflow is triggered via **CLI, API, or environment variables**.
 
 ---
 
-### Built-in Exceptions
+## Built-in Exceptions
 
 | Exception | Status Code |
 |-----------|------------|
@@ -18,12 +20,12 @@ Raise these inside nodes (or workflows) to set both **runtime status** and **pro
 
 ---
 
-### Usage Inside a Node
+## Usage Inside a Node
 
 !!! code "Node Exception Example"
     ```python
-    from fluxcli.node import Node
-    from fluxcli.exceptions import DataValidationFailureException
+    from fluxly.node import Node
+    from fluxly.exceptions import DataValidationFailureException
 
     class Validate(Node):
         def _is_valid_input(self) -> bool:
@@ -36,23 +38,23 @@ Raise these inside nodes (or workflows) to set both **runtime status** and **pro
 
 ---
 
-### Custom Exceptions
+## Custom Exceptions
 
-You can define custom exceptions by subclassing `WorkflowException`.  
-Make sure to set an **exit code** using a `StatusCodes` Enum value.
+Define custom exceptions by subclassing `WorkflowException`.  
+Always set an **exit code** using a `StatusCodes` Enum value to ensure consistent behavior across all triggers.
 
 !!! code "Custom Exception Example"
     ```python
     from enum import Enum
     
-    from fluxcli.exceptions import WorkflowException
-    from fluxcli.status import StatusCodes
+    from fluxly.exceptions import WorkflowException
+    from fluxly.status import StatusCodes
 
     class BusinessRuleViolation(WorkflowException):
         exit_code: Enum = StatusCodes.DATA_ERROR
     ```
 
 !!! note "Rules for Custom Exceptions"
-    - Exit codes must be **validated integers (0–255)**.  
-    - Raising a `WorkflowException` marks the **current node attempt** with that status.  
-    - Workflow execution propagates the **consistent status and exit code** downstream.
+- Exit codes must be **validated integers (0–255)**.  
+- Raising a `WorkflowException` marks the **current node attempt** with that status.  
+- Workflow execution propagates the **consistent status and exit code** downstream, whether running via **CLI, API, or environment variables**.

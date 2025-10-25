@@ -1,29 +1,28 @@
 <div align="center">
-  <img src="./docs/imgs/logo.jpg" 
+  <img src="./docs/imgs/logo.png" 
        style="max-width: 250px;" 
-       alt="FluxCLI Logo" 
-       title="FluxCLI Logo">
+       alt="Fluxly Logo" 
+       title="Fluxly Logo">
 
 
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)
 
-FluxCLI - Lightweight, CLI-first framework for building **directed acyclic graph (DAG)**-based workflows.
+Fluxly — Lightweight framework for portable, self-contained DAG workflows, decoupled from orchestration.
 
 </div>
 
 ---
 
-FluxCLI is a lightweight framework for building and running **DAG-based workflows**.  
-Each workflow is defined as a **graph of command-line actions**, and the entire graph itself becomes a **single CLI command**.
+**Fluxly** is a lightweight framework for building and running **directed acyclic graph (DAG)-based workflows**.  
 
-This design makes workflows fully **self-contained**:
+The entire workflow acts as a **self-contained execution endpoint**:
 
-- Run them locally as normal CLI tools.
-- Wrap them in Docker images for portability.
-- Plug them into higher-level orchestrators (Argo, Airflow, Prefect, CI/CD) without extra glue code.
+- Run them locally or via CLI commands, API calls, or environment triggers.
+- Package them in containers for portability.
+- Integrate seamlessly with higher-level orchestrators (Argo, Airflow, Prefect, CI/CD) without extra glue code.
 
-With FluxCLI, pipelines are **highly structured** for safer execution, cleaner debugging, and better modularity.  
-Workflows can run standalone or as part of a larger system, making FluxCLI both lightweight and flexible.
+With **Fluxly**, pipelines are **highly structured**, enabling safer execution, easier debugging, and better modularity.  
+Workflows can run standalone or as part of a larger system, making **Fluxly** both lightweight and flexible.
 
 ---
 
@@ -31,23 +30,39 @@ Workflows can run standalone or as part of a larger system, making FluxCLI both 
 
 ---
 
+## Generated Entrypoints (CLI and API)
+
+The package automatically exposes a CLI command and API endpoints for each registered workflow.
+
+<div align="center">
+  <img src="docs/imgs/cli_menu.png" alt="Fluxly CLI Menu" title="Fluxly CLI Menu" style="max-width: 700px; width: 100%;" />
+  <p><em>Auto-generated CLI commands per workflow.</em></p>
+</div>
+
+<div align="center">
+  <img src="docs/imgs/swagger.png" alt="Fluxly Swagger UI" title="Fluxly Swagger UI" style="max-width: 700px; width: 100%;" />
+  <p><em>Auto-generated API endpoints per workflow in Swagger UI.</em></p>
+</div>
+
+---
+
 ## Documentation
 
-Comprehensive documentation for FluxCLI is available online:
+Comprehensive documentation for Fluxly is available online:
 
-- **View the docs:** [GitHub Pages](https://shaharband.github.io/fluxcli/)
+- **View the docs:** [GitHub Pages](https://shaharband.github.io/fluxly/)
 
 ---
 
 ## 1. Key Features
 
-- **CLI-based actions** – every node has a clear interface for inputs and outputs.
-- **DAG-based workflows** – define arbitrary connections between tasks and their dependencies.
+- **Flexible entrypoints** – workflows can be triggered via CLI, API calls, or environment variables.
+- **DAG-based workflows** – define arbitrary connections between nodes and their dependencies.
 - **Highly structured workflows** – strict validation ensures safer pipelines, easier debugging, and predictable behavior.
 - **Self-orchestrated nodes** – each node manages its own execution, retries, and dependencies.
-- **Lightweight building blocks** – workflows are small, self-contained units that can each run in their own environment.
-- **Extensible by design** – wrap workflows with your own classes to add logging, metrics, or integrations.
-- **Local-first development** – debug and run workflows as simple CLIs, then scale them seamlessly to CI/CD or external orchestrators.
+- **Lightweight building blocks** – workflows are self-contained units that can run independently in any environment.
+- **Extensible by design** – wrap workflows with custom classes to add logging, metrics, or integrations.
+- **Local-first development** – debug and run workflows standalone, then scale seamlessly to CI/CD or external orchestrators.
 
 ---
 
@@ -55,6 +70,8 @@ Comprehensive documentation for FluxCLI is available online:
 
 - [**Pydantic**](https://github.com/pydantic/pydantic): Strict data validation and schema for inputs/outputs.
 - [**Typer**](https://github.com/fastapi/typer): Easy wrapper for building great CLIs.
+- [**FastAPI**](https://github.com/tiangolo/fastapi): Modern, high-performance web framework for building APIs.  
+- [**Uvicorn**](https://www.uvicorn.org/): Lightning-fast ASGI server for running FastAPI apps. 
 - [**Loguru**](https://github.com/Delgan/loguru): Simple, efficient logging for Python.
 - [**Diagrams**](https://github.com/mingrammer/diagrams): Auto-generate DAG diagrams as code.
 - [**Pixi**](https://github.com/prefix-dev/pixi): Cross-platform package and environment management.
@@ -73,5 +90,5 @@ Comprehensive documentation for FluxCLI is available online:
 Install with `pip`:
 
 ```bash
-pip install fluxcli
+pip install fluxly
 ```

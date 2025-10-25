@@ -1,13 +1,13 @@
 import time
 import unittest
 
-from fluxcli.exceptions import (
+from fluxly.exceptions import (
     DataErrorException,
     TimeoutException,
 )
-from fluxcli.node import Node
-from fluxcli.status import StatusCodes
-from fluxcli.workflow import Workflow, WorkflowInput
+from fluxly.node import Node
+from fluxly.status import StatusCodes
+from fluxly.workflow import Workflow, WorkflowInput
 
 
 class OkNode(Node):

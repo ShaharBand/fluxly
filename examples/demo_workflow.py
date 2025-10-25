@@ -1,7 +1,7 @@
 import time
 
-from fluxcli.node import Node
-from fluxcli.workflow import Workflow, WorkflowInput
+from fluxly.node import Node
+from fluxly.workflow import Workflow, WorkflowInput
 
 
 class NodeA(Node):

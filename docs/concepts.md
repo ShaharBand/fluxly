@@ -1,4 +1,4 @@
-FluxCLI revolves around a few central abstractions that let you build **typed, maintainable, and DAG-based workflows**.
+Fluxly revolves around a few central abstractions that let you build **typed, maintainable, and DAG-based workflows**.
 
 ---
 
@@ -14,7 +14,7 @@ A `Workflow` represents a **DAG of nodes**, including metadata, inputs, executio
 
 !!! code "Workflow Example"
     ```python
-    from fluxcli.workflow import Workflow
+    from fluxly.workflow import Workflow
 
     wf = Workflow(name="demo-workflow", description="Demo workflow")
     ```
@@ -27,12 +27,12 @@ A `Workflow` represents a **DAG of nodes**, including metadata, inputs, executio
 
 !!! note "Typed Inputs"
     - Uses Pydantic for validation.
-    - Drives **CLI auto-generation**, including flags, defaults, and type hints.
+    - Drives **CLI flag generation and API payload validation**, including defaults, type hints, and descriptions.
     - Accessible to all nodes via `self.workflow_input`.
 
 !!! code "WorkflowInput Example"
     ```python
-    from fluxcli.workflow import WorkflowInput
+    from fluxly.workflow import WorkflowInput
 
     class MyInput(WorkflowInput):
         message: str = "Hello"
@@ -53,7 +53,7 @@ A `Node` represents a **single unit of work** in a workflow.
 
 !!! code "Node Example"
     ```python
-    from fluxcli.node import Node
+    from fluxly.node import Node
 
     class PrintNode(Node):
         @property
@@ -77,7 +77,7 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "producer.py"
     ```python
-    from fluxcli.node import Node, NodeExecution, NodeOutput
+    from fluxly.node import Node, NodeExecution, NodeOutput
 
     class ProducerOutput(NodeOutput):
         value: int | None = None
@@ -95,7 +95,7 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "consumer.py"
     ```python
-    from fluxcli.node import Node
+    from fluxly.node import Node
 
     from producer import Producer
 
@@ -109,7 +109,7 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "workflow.py"
     ```python
-    from fluxcli.workflow import Workflow
+    from fluxly.workflow import Workflow
 
     from producer import Producer
     from consumer import Consumer
@@ -125,8 +125,8 @@ Each node typically lives in its own file; import node classes and create instan
 
 !!! code "Conditional edge based on upstream status"
     ```python
-    from fluxcli.workflow import Workflow
-    from fluxcli.status import StatusCodes
+    from fluxly.workflow import Workflow
+    from fluxly.status import StatusCodes
 
     wf = Workflow(name="demo")
     producer = Producer(name="producer")
@@ -217,7 +217,7 @@ This enables **consistent cross-cutting behavior** without modifying core busine
 
 ## Lifecycle Hooks
 
-FluxCLI nodes provide **lifecycle hooks** that let you add custom behavior at key points of execution without modifying `_logic()`.  
+Fluxly nodes provide **lifecycle hooks** that let you add custom behavior at key points of execution without modifying `_logic()`.  
 
 !!! note "Available Hooks"
     - `on_start` – called before `_logic()` runs.
@@ -227,7 +227,7 @@ FluxCLI nodes provide **lifecycle hooks** that let you add custom behavior at ke
 
 !!! code "Hooks Example"
     ```python
-    from fluxcli.node import Node
+    from fluxly.node import Node
 
     from my_input import MyInput
 
@@ -256,7 +256,7 @@ FluxCLI nodes provide **lifecycle hooks** that let you add custom behavior at ke
 
 ## NodeExecution & WorkflowExecution
 
-FluxCLI allows you to **customize the execution structure** by overriding how executions, outputs, and metadata are created.  
+Fluxly allows you to **customize the execution structure** by overriding how executions, outputs, and metadata are created.  
 This lets you inject custom behavior, logging, or extended data without modifying the core node logic.
 
 
@@ -281,7 +281,7 @@ Example:
 !!! code "custom_execution.py"
     ```python
     from pydantic import BaseModel
-    from fluxcli.node import NodeExecution, NodeMetadata
+    from fluxly.node import NodeExecution, NodeMetadata
 
     # Custom output for this node
     class CustomNodeOutput(BaseModel):
@@ -297,7 +297,7 @@ Using Custom Execution:
 
 !!! code "custom_node.py"
     ```python
-    from fluxcli.node import Node
+    from fluxly.node import Node
 
     import CustomNodeExecution, CustomNodeOutput
 

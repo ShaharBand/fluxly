@@ -1,9 +1,9 @@
 import time
 import unittest
 
-from fluxcli.exceptions import DataErrorException, TimeoutException
-from fluxcli.node import Node
-from fluxcli.status import StatusCodes
+from fluxly.exceptions import DataErrorException, TimeoutException
+from fluxly.node import Node
+from fluxly.status import StatusCodes
 
 
 class FlakyNode(Node):

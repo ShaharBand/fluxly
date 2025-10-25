@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from fluxcli.node import NodeOutput
+from fluxly.node import NodeOutput
 
 
 class BetaOutput(NodeOutput):

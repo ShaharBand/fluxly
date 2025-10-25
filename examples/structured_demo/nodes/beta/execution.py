@@ -1,4 +1,4 @@
-from fluxcli.node import NodeExecution
+from fluxly.node import NodeExecution
 
 from .output import BetaOutput
 

@@ -1,8 +1,8 @@
-More about FluxCLI:
+More about Fluxly:
 
-- **Repository**: [GitHub](https://github.com/ShaharBand/fluxcli)  
-- **PyPI**: [fluxcli](https://pypi.org/project/fluxcli/)  
-- **Report Issues**: [GitHub Issues](https://github.com/ShaharBand/fluxcli/issues)  
+- **Repository**: [GitHub](https://github.com/ShaharBand/fluxly)  
+- **PyPI**: [fluxly](https://pypi.org/project/fluxly/)  
+- **Report Issues**: [GitHub Issues](https://github.com/ShaharBand/fluxly/issues)  
 
 !!! note "Article Coming Soon"
-    A detailed article explaining FluxCLI concepts and usage will be published shortly.
+    A detailed article explaining Fluxly concepts and usage will be published shortly.

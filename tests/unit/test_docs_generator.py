@@ -2,10 +2,10 @@ import os
 import tempfile
 import unittest
 
-from fluxcli.core.docs_generator.generator import generate_workflow_documentation
-from fluxcli.core.node.node import Node
-from fluxcli.core.workflow.input import WorkflowInput
-from fluxcli.core.workflow.workflow import Workflow
+from fluxly.core.docs_generator.generator import generate_workflow_documentation
+from fluxly.core.node.node import Node
+from fluxly.core.workflow.input import WorkflowInput
+from fluxly.core.workflow.workflow import Workflow
 
 
 class _NoopNode(Node):
@@ -18,7 +18,7 @@ def _build_simple_workflow() -> Workflow:
         name="DocsGenWF",
         description="Docs generator test",
         version="0.1.0",
-        inputs=WorkflowInput(cli_command_name="docs-gen-wf", auto_generate_md=False),
+        inputs=WorkflowInput(auto_generate_md=False),
     )
 
     n1 = _NoopNode(name="A-test", description="First")

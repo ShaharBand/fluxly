@@ -1,10 +1,10 @@
 [project]
-name = "FluxCLI"
-description = "a framework for building and running lightweight directed acyclic graph (DAG)-based workflows, CLI-first design"
+name = "Fluxly"
+description = "A framework for building portable, self-contained DAG workflows decoupled from orchestration."
 readme = "README.md"
 authors = [{ name = "Shahar Band", email = "shahar1531@gmail.com" }]
 license = { text = "MIT License" }
-keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "fluxcli"]
+keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "fluxly"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -15,13 +15,15 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-version = "0.1.0"
+version = "1.0.0"
 requires-python = ">=3.10,<3.14"
 dependencies = [
     "pydantic>=2.10.4,<3",
     "loguru>=0.7.0",
     "diagrams>=0.23.4,<0.24",
     "typer>=0.12.5,<1",
+    "fastapi>=0.115.0,<1",
+    "uvicorn>=0.30.0,<1",
 ]
 
 [build-system]
@@ -42,9 +44,11 @@ pydantic = ">=2.10.4,<3"
 loguru = ">=0.7.0"
 diagrams = ">=0.23.4,<0.24"
 typer = ">=0.12.5,<1"
+fastapi = ">=0.119.1,<0.120"
+uvicorn = ">=0.38.0,<0.39"
 
 [tool.pixi.feature.dev.dependencies]
-pixi-pycharm = "*"
+pixi-pycharm = ">=0.0.9,<0.0.10"
 pytest = ">=8.4.2,<9"
 ruff = ">=0.14.1,<0.15"
 mypy = ">=1.18.2,<2"
@@ -64,9 +68,10 @@ typecheck = "mypy ."
 coverage = "coverage run -m pytest && coverage report -m"
 docs-build = "mkdocs build"
 docs-serve = "mkdocs serve"
+run-demo = "python -m examples.structured_demo.app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["fluxcli"]
+packages = ["fluxly"]
 
 [tool.mypy]
 strict = true
@@ -122,10 +127,7 @@ ignore = [
     "W191",  # indentation contains tabs
     "B904",  # Allow raising exceptions without from e, for HTTPException
 ]
-exclude = [
-    "fluxcli/core/workflow/__init__.py",
-    "fluxcli/core/node/__init__.py"
-]
+exclude = []
 fixable = ["ALL"]
 unfixable = []
 
@@ -140,7 +142,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-source = ["fluxcli"]
+source = ["fluxly"]
 dynamic_context = "test_function"
 
 [tool.coverage.report]
