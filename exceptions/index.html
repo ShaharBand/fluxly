@@ -981,12 +981,12 @@ Always set an <strong>exit code</strong> using a <code>StatusCodes</code> Enum v
 </div>
 <div class="admonition note">
 <p class="admonition-title">Rules for Custom Exceptions</p>
-</div>
 <ul>
 <li>Exit codes must be <strong>validated integers (0–255)</strong>.  </li>
 <li>Raising a <code>WorkflowException</code> marks the <strong>current node attempt</strong> with that status.  </li>
 <li>Workflow execution propagates the <strong>consistent status and exit code</strong> downstream, whether running via <strong>CLI, API, or environment variables</strong>.</li>
 </ul>
+</div>
 
 
 
