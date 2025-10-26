@@ -548,6 +548,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nodeexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      NodeExecution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflowexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      WorkflowExecution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execution-groups" class="md-nav__link">
     <span class="md-ellipsis">
       Execution Groups
@@ -578,15 +596,6 @@
   <a href="#lifecycle-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       Lifecycle Hooks
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nodeexecution-workflowexecution" class="md-nav__link">
-    <span class="md-ellipsis">
-      NodeExecution &amp; WorkflowExecution
     </span>
   </a>
   
@@ -940,6 +949,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nodeexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      NodeExecution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflowexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      WorkflowExecution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execution-groups" class="md-nav__link">
     <span class="md-ellipsis">
       Execution Groups
@@ -970,15 +997,6 @@
   <a href="#lifecycle-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       Lifecycle Hooks
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nodeexecution-workflowexecution" class="md-nav__link">
-    <span class="md-ellipsis">
-      NodeExecution &amp; WorkflowExecution
     </span>
   </a>
   
@@ -1149,6 +1167,108 @@
 </code></pre></div>
 </div>
 <hr />
+<h2 id="nodeexecution">NodeExecution<a class="headerlink" href="#nodeexecution" title="Permanent link">&para;</a></h2>
+<p>Fluxly allows you to <strong>customize the execution structure</strong> by overriding how executions, outputs, and metadata are created.<br />
+This lets you inject custom behavior, logging, or extended data without modifying the core node logic.</p>
+<p><strong>Default Execution Structure:</strong></p>
+<ul>
+<li><strong>NodeExecution</strong> wraps:</li>
+<li><code>metadata</code> → <code>NodeMetadata</code> (start/end times, computed duration)</li>
+<li><code>status</code> → <code>StatusCodes</code> (WAITING, IN_PROGRESS, COMPLETED, FAILED)</li>
+<li><code>output</code> → <code>NodeOutput</code> (data produced by <code>_logic()</code>)</li>
+<li><code>error</code> → <code>NodeError</code> (if the execution fails)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Custom Execution</p>
+<p>By overriding <code>_create_execution()</code> on a Node, you can use a custom subclass of <code>NodeExecution</code> that stores extra info (e.g., logs, intermediate metrics).</p>
+</div>
+<p>Example:</p>
+<div class="admonition code">
+<p class="admonition-title">custom_execution.py</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeMetadata</span><span class="p">,</span> <span class="n">NodeOutput</span>
+
+<span class="c1"># Custom output for this node</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeOutput</span><span class="p">(</span><span class="n">NodeOutput</span><span class="p">):</span>
+    <span class="n">result_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Custom execution with typed metadata and output</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeExecution</span><span class="p">(</span><span class="n">NodeExecution</span><span class="p">):</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">NodeMetadata</span> <span class="o">=</span> <span class="n">NodeMetadata</span><span class="p">()</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">CustomNodeOutput</span> <span class="o">=</span> <span class="n">CustomNodeOutput</span><span class="p">()</span>
+</code></pre></div>
+</div>
+<p>Using Custom Execution:</p>
+<div class="admonition code">
+<p class="admonition-title">custom_node.py</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">CustomNodeExecution</span><span class="o">,</span><span class="w"> </span><span class="nn">CustomNodeOutput</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">current_execution</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">last_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">last_execution</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CustomNodeExecution</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">result_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;processed</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CustomNode produced: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">result_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Benefits of Custom Execution &amp; Metadata</p>
+<ul>
+<li>Base output and metadata are tracked automatically.</li>
+<li>Output fields are fully typed for IDE and type-checker support.</li>
+<li>Custom execution enables <strong>per-node outputs and richer metadata</strong>.</li>
+<li>Facilitates advanced workflows with typed inspection and logging.</li>
+</ul>
+</div>
+<hr />
+<h2 id="workflowexecution">WorkflowExecution<a class="headerlink" href="#workflowexecution" title="Permanent link">&para;</a></h2>
+<p><code>WorkflowExecution</code> represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. The default <code>WorkflowOutput</code> includes overall status and the list of <code>NodeExecution</code> objects produced during the run.</p>
+<p><strong>Default Execution Structure:</strong></p>
+<ul>
+<li><code>metadata</code> → <code>WorkflowMetadata</code> (workflow start/end times, execution summary)</li>
+<li><code>status</code> → <code>StatusCodes</code> (WAITING, IN_PROGRESS, COMPLETED, FAILED)</li>
+<li><code>output</code> → <code>WorkflowOutput</code> with:</li>
+<li><code>status</code> (mirrors workflow status)</li>
+<li><code>nodes_executions: list[NodeExecution]</code></li>
+</ul>
+<p>You can override <code>_create_execution()</code> on a <code>Workflow</code> to return a custom <code>WorkflowExecution</code> with a custom <code>WorkflowOutput</code>, for example to track workflow-level artifacts aggregated from nodes.</p>
+<div class="admonition code">
+<p class="admonition-title">Custom WorkflowExecution with artifacts</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">WorkflowExecution</span><span class="p">,</span> <span class="n">WorkflowOutput</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomWorkflowOutput</span><span class="p">(</span><span class="n">WorkflowOutput</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomWorkflowExecution</span><span class="p">(</span><span class="n">WorkflowExecution</span><span class="p">):</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">CustomWorkflowOutput</span> <span class="o">=</span> <span class="n">CustomWorkflowOutput</span><span class="p">()</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyWorkflow</span><span class="p">(</span><span class="n">Workflow</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomWorkflowExecution</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CustomWorkflowExecution</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="c1"># Collect artifacts exposed by nodes&#39; outputs (if any)</span>
+        <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">nodes_executions</span><span class="p">:</span>
+            <span class="n">node_out</span> <span class="o">=</span> <span class="n">ex</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span>
+            <span class="k">if</span> <span class="n">node_out</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">node_out</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">node_out</span><span class="o">.</span><span class="n">uri</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">node_out</span><span class="o">.</span><span class="n">uri</span>
+</code></pre></div>
+</div>
+<p>This keeps artifacts typed and discoverable, without coupling business logic to orchestration.</p>
+<hr />
 <h2 id="execution-groups">Execution Groups<a class="headerlink" href="#execution-groups" title="Permanent link">&para;</a></h2>
 <p>Execution groups define <strong>sets of nodes</strong>, where the workflow is considered <strong>successful if at least one group succeeds</strong>.  </p>
 <p>Even after a group succeeds, the <strong>workflow continues running</strong> until <strong>no new runnable nodes</strong> remain (i.e., all reachable dependencies are exhausted).</p>
@@ -1178,22 +1298,12 @@
     <span class="n">node_c</span><span class="p">,</span>
     <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">node_b</span><span class="o">.</span><span class="n">last_execution</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusCodes</span><span class="o">.</span><span class="n">COMPLETED</span>
 <span class="p">)</span>
-</code></pre></div>
-</div>
-<div class="admonition code">
-<p class="admonition-title">Edge that runs only if source completed</p>
-<div class="highlight"><pre><span></span><code><span class="n">workflow</span><span class="o">.</span><span class="n">add_edge_if_source_completed</span><span class="p">(</span><span class="n">node_a</span><span class="p">,</span> <span class="n">node_b</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge_if_source_completed</span><span class="p">(</span><span class="n">node_a</span><span class="p">,</span> <span class="n">node_b</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <hr />
 <h2 id="wrapping-extensibility">Wrapping &amp; Extensibility<a class="headerlink" href="#wrapping-extensibility" title="Permanent link">&para;</a></h2>
-<p>Workflows and nodes can be <strong>wrapped or subclassed</strong> to add:</p>
-<ul>
-<li>Logging and metrics</li>
-<li>Policy enforcement</li>
-<li>Integrations with external services</li>
-<li>Retry or error-handling strategies</li>
-</ul>
+<p>Workflows and nodes are <strong>fully extensible</strong> — you can wrap or subclass them to introduce cross-cutting features.</p>
 <div class="admonition code">
 <p class="admonition-title">Extensibility Example</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LoggingNode</span><span class="p">(</span><span class="n">PrintNode</span><span class="p">):</span>
@@ -1246,79 +1356,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished execution for node: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<hr />
-<h2 id="nodeexecution-workflowexecution">NodeExecution &amp; WorkflowExecution<a class="headerlink" href="#nodeexecution-workflowexecution" title="Permanent link">&para;</a></h2>
-<p>Fluxly allows you to <strong>customize the execution structure</strong> by overriding how executions, outputs, and metadata are created.<br />
-This lets you inject custom behavior, logging, or extended data without modifying the core node logic.</p>
-<p><strong>Default Execution Structure:</strong></p>
-<ul>
-<li><strong>NodeExecution</strong> wraps:</li>
-<li><code>metadata</code> → <code>NodeMetadata</code> (start/end times, computed duration)</li>
-<li><code>status</code> → <code>StatusCodes</code> (WAITING, IN_PROGRESS, COMPLETED, FAILED)</li>
-<li><code>output</code> → <code>NodeOutput</code> (data produced by <code>_logic()</code>)</li>
-<li>
-<p><code>error</code> → <code>NodeError</code> (if the execution fails)</p>
-</li>
-<li>
-<p><strong>WorkflowExecution</strong> aggregates:</p>
-</li>
-<li><code>metadata</code> → <code>WorkflowMetadata</code> (workflow start/end times, execution summary)</li>
-<li><code>output</code> → Workflow-level output dictionary</li>
-<li>Status derived from node executions and execution groups</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Custom Execution</p>
-<p>By overriding <code>_create_execution()</code> on a Node, you can use a custom subclass of <code>NodeExecution</code> that stores extra info (e.g., logs, intermediate metrics).</p>
-</div>
-<p>Example:</p>
-<div class="admonition code">
-<p class="admonition-title">custom_execution.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeExecution</span><span class="p">,</span> <span class="n">NodeMetadata</span>
-
-<span class="c1"># Custom output for this node</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeOutput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">result_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="c1"># Custom execution with typed metadata and output</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomNodeExecution</span><span class="p">(</span><span class="n">NodeExecution</span><span class="p">):</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="n">NodeMetadata</span> <span class="o">=</span> <span class="n">NodeMetadata</span><span class="p">()</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n">CustomNodeOutput</span> <span class="o">=</span> <span class="n">CustomNodeOutput</span><span class="p">()</span>
-</code></pre></div>
-</div>
-<p>Using Custom Execution:</p>
-<div class="admonition code">
-<p class="admonition-title">custom_node.py</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">CustomNodeExecution</span><span class="o">,</span><span class="w"> </span><span class="nn">CustomNodeOutput</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">current_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">current_execution</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">last_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">last_execution</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomNodeExecution</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">CustomNodeExecution</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">result_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;processed</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CustomNode produced: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">result_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Benefits of Custom Execution &amp; Metadata</p>
-<ul>
-<li><code>metadata.start_time</code> and <code>metadata.end_time</code> are tracked automatically.</li>
-<li>Output fields are fully typed for IDE and type-checker support.</li>
-<li>Custom execution enables <strong>per-node outputs and richer metadata</strong>.</li>
-<li>Facilitates advanced workflows with typed inspection and logging.</li>
-</ul>
 </div>
 
 
