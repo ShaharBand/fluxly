@@ -22,7 +22,7 @@ class Alpha(Node):
     def _create_execution(self) -> AlphaNodeExecution:
         return AlphaNodeExecution()
 
-    def _logic(self) -> None: 
+    def _logic(self) -> None:
         msg = self.workflow_input.message
         if not msg:
             msg = "hello from alpha"
