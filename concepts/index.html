@@ -1177,6 +1177,7 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 <li><code>status</code> → <code>StatusCodes</code> (WAITING, IN_PROGRESS, COMPLETED, FAILED)</li>
 <li><code>output</code> → <code>NodeOutput</code> (data produced by <code>_logic()</code>)</li>
 <li><code>error</code> → <code>NodeError</code> (if the execution fails)</li>
+<li><code>attempt</code> → 1-indexed attempt number for this execution</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Custom Execution</p>
@@ -1232,23 +1233,27 @@ This lets you inject custom behavior, logging, or extended data without modifyin
 </div>
 <hr />
 <h2 id="workflowexecution">WorkflowExecution<a class="headerlink" href="#workflowexecution" title="Permanent link">&para;</a></h2>
-<p><code>WorkflowExecution</code> represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. The default <code>WorkflowOutput</code> includes overall status and the list of <code>NodeExecution</code> objects produced during the run.</p>
+<p><code>WorkflowExecution</code> represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. </p>
 <p><strong>Default Execution Structure:</strong></p>
 <ul>
 <li><code>metadata</code> → <code>WorkflowMetadata</code> (workflow start/end times, execution summary)</li>
 <li><code>status</code> → <code>StatusCodes</code> (WAITING, IN_PROGRESS, COMPLETED, FAILED)</li>
 <li><code>output</code> → <code>WorkflowOutput</code> with:</li>
 <li><code>status</code> (mirrors workflow status)</li>
-<li><code>nodes_executions: list[NodeExecution]</code></li>
+<li><code>node_to_executions: dict[str, list[NodeExecution]]</code> mapping node name → all its executions</li>
 </ul>
 <p>You can override <code>_create_execution()</code> on a <code>Workflow</code> to return a custom <code>WorkflowExecution</code> with a custom <code>WorkflowOutput</code>, for example to track workflow-level artifacts aggregated from nodes.</p>
 <div class="admonition code">
 <p class="admonition-title">Custom WorkflowExecution with artifacts</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">WorkflowExecution</span><span class="p">,</span> <span class="n">WorkflowOutput</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluxly.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">WorkflowExecution</span><span class="p">,</span> <span class="n">WorkflowOutput</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomWorkflowOutput</span><span class="p">(</span><span class="n">WorkflowOutput</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WorkflowArtifact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomWorkflowOutput</span><span class="p">(</span><span class="n">WorkflowOutput</span><span class="p">):</span>
+    <span class="n">artifacts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowArtifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomWorkflowExecution</span><span class="p">(</span><span class="n">WorkflowExecution</span><span class="p">):</span>
     <span class="n">output</span><span class="p">:</span> <span class="n">CustomWorkflowOutput</span> <span class="o">=</span> <span class="n">CustomWorkflowOutput</span><span class="p">()</span>
@@ -1257,14 +1262,16 @@ This lets you inject custom behavior, logging, or extended data without modifyin
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomWorkflowExecution</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomWorkflowExecution</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> 
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Collect artifacts exposed by nodes&#39; outputs (if any)</span>
-        <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">nodes_executions</span><span class="p">:</span>
-            <span class="n">node_out</span> <span class="o">=</span> <span class="n">ex</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span>
-            <span class="k">if</span> <span class="n">node_out</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">node_out</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="n">node_out</span><span class="o">.</span><span class="n">uri</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">node_out</span><span class="o">.</span><span class="n">uri</span>
+        <span class="n">artifacts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WorkflowArtifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">attempts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">node_to_executions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">attempt_number</span><span class="p">,</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">attempts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">node_out</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">output</span>
+                <span class="k">if</span> <span class="n">node_out</span><span class="o">.</span><span class="n">artifacts</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">node_out</span><span class="o">.</span><span class="n">artifacts</span><span class="p">:</span>
+                        <span class="n">artifacts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WorkflowArtifact</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">uri</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_execution</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">artifacts</span> <span class="o">=</span> <span class="n">artifacts</span>
 </code></pre></div>
 </div>
 <p>This keeps artifacts typed and discoverable, without coupling business logic to orchestration.</p>
