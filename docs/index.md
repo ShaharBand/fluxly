@@ -25,6 +25,15 @@ The entire workflow acts as a **self-contained execution endpoint**:
 With **Fluxly**, pipelines are **highly structured**, enabling safer execution, easier debugging, and better modularity.  
 Workflows can run standalone or as part of a larger system, making **Fluxly** both lightweight and flexible.
 
+## Why Fluxly (the problem it solves)
+
+- Unstructured container pipelines become spaghetti: per‑container scripts, mismatched inputs/outputs, and duplicated retries/timeouts/logging without a shared wrapper.
+- Heavy solutions like Airflow require schedulers, DBs, and webservers—great for platforms, heavy for simple, portable pipelines.
+- Orchestrator‑centric SDKs (e.g., Prefect) add remote control planes and runtime coupling that don’t fit autonomous, fire‑and‑forget containers.
+- Fluxly keeps logic structured and isolated inside a single repo and image: typed I/O models, explicit DAG, consistent entrypoints (CLI/API/env), and clear node boundaries. Any orchestrator can trigger it, but your code stays clean and portable.
+- Ideal when each Docker should remain simple and self‑contained, with minimal coordination overhead.
+- In monorepos—or by wrapping Fluxly—you can centralize shared services, typed inputs, validations, outputs, and metadata to fit org standards. This thin wrapper standardizes containers and removes boilerplate across pipelines.
+
 ---
 
 !!! note "Complex workflow"
