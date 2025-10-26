@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 from fluxly.core.utils.types import DatetimeReadable, TimedeltaReadable
 
@@ -9,6 +9,7 @@ class WorkflowMetadata(BaseModel):
     start_time: Annotated[DatetimeReadable, Field(description="Start datetime of the workflow execution.")] = None
     end_time: Annotated[DatetimeReadable, Field(description="End datetime of the workflow execution.")] = None
 
+    @computed_field
     @property
     def process_time(self) -> TimedeltaReadable:
         if self.start_time and self.end_time:

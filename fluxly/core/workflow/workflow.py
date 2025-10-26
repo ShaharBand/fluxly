@@ -79,6 +79,10 @@ class Workflow(BaseModel):
     def metadata(self) -> WorkflowMetadata:
         return self.current_execution.metadata
 
+    @property
+    def executions(self) -> list[WorkflowExecution]:
+        return self._executions
+
     def init_by_cli(self) -> None:
         try:
             self.execute()
@@ -163,6 +167,7 @@ class Workflow(BaseModel):
 
     def _start_workflow_execution(self) -> None:
         execution = self._create_execution()
+        execution._attempt = self.attempt + 1
         execution.metadata.start_time = datetime.now()
         execution.status = StatusCodes.IN_PROGRESS
         self._executions.append(execution)
@@ -259,7 +264,7 @@ class Workflow(BaseModel):
                 thread.join()
                 node = self._graph.nodes[name]
                 completed.add(node)
-                self.current_execution.output.nodes_executions.append(node.last_execution)
+                self.current_execution.output.node_to_executions[node.name] = node.executions
                 self._log_node_summary(node)
                 if node.last_execution.status != StatusCodes.COMPLETED:
                     if self._all_execution_groups_dead():
@@ -302,8 +307,6 @@ class Workflow(BaseModel):
             return
 
         latest = self.last_execution
-        meta_str, out_str = (str(latest.metadata), str(latest.status)) if latest else ("{}", "{}")
-
         prev_status_lines = [
             f"  - Attempt #{i}: status={ex.status} duration={ex.metadata.process_time}"
             for i, ex in enumerate(self._executions[:-1], 1)
@@ -313,8 +316,7 @@ class Workflow(BaseModel):
 
         self._logger.info(f"{'-'*30}\n"
                           f"Summary - Workflow: {self.name} - Attempt #{self.attempt}\n"
-                          f"Metadata: {meta_str}\n"
-                          f"Output: {out_str}\n"
+                          f"Execution: {latest}\n"
                           f"{prev_section}"
                           f"{'-'*30}")
 
@@ -344,11 +346,6 @@ class Workflow(BaseModel):
                 )
             return
 
-        meta, out, err = (
-            (str(latest.metadata), str(latest.output), str(latest.error))
-            if latest else ("{}", "{}", "{}")
-        )
-
         prev_failures = [
             f"\t\t- Attempt #{i}: status={ex.status} duration={ex.metadata.process_time} "
             f"error={ex.error.exception_class_name if ex.error else None}: "
@@ -366,9 +363,7 @@ class Workflow(BaseModel):
         self._logger.info(
             f"{'-'*30}\n"
             f"Summary - Node: {node.name} - Execution #{node.attempt}\n"
-            f"Metadata: {meta}\n"
-            f"Output: {out}\n"
-            f"Error: {err}\n"
+            f"Execution: {latest}\n"
             f"{prev_section}"
             f"{'-'*30}"
         )

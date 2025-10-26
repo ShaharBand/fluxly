@@ -34,8 +34,8 @@ class Node(ABC, BaseModel):
         return self._id
 
     @property
-    def executions(self) -> tuple[NodeExecution, ...]:
-        return tuple(self._executions)
+    def executions(self) -> list[NodeExecution]:
+        return self._executions
 
     @property
     def workflow_input(self) -> WorkflowInput | None:
@@ -87,6 +87,7 @@ class Node(ABC, BaseModel):
 
     def _start_node_execution(self) -> None:
         execution = self._create_execution()
+        execution._attempt = self.attempt + 1
         execution.metadata.start_time = datetime.now()
         execution.status = StatusCodes.IN_PROGRESS
         self._executions.append(execution)

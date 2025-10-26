@@ -43,11 +43,11 @@ class RunnerService:
                 wf.execute()
                 latest = wf.last_execution
                 rec.status = latest.status.name
-                rec.executions = wf._executions
+                rec.executions = wf.executions
             except Exception as e:
                 latest = wf.last_execution
                 rec.status = latest.status.name if latest else StatusCodes.FAILED.name
-                rec.executions = wf._executions
+                rec.executions = wf.executions
                 rec.error = str(e)
 
         threading.Thread(target=_run, daemon=True).start()

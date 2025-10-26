@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class WorkflowInput(BaseModel):
+    model_config = {"extra": "forbid"}
     verbose: Annotated[bool, Field(description="Print more details for debug")] = True
     timeout_seconds: Annotated[int | None, Field(default=None, gt=0, description="Timeout for the workflow in seconds.")] = None
     max_retries: Annotated[int, Field(ge=0, description="Maximum number of run attempts allowed in case of failure.")] = 0

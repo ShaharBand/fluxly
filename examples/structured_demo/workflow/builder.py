@@ -13,6 +13,7 @@ def build_demo_workflow() -> Workflow:
     workflow.add_node(alpha)
     workflow.add_node(beta)
     workflow.add_edge(alpha, beta)
+    workflow.add_execution_group([beta])
 
     workflow.inputs = DemoWorkflowInput(
         verbose=True,

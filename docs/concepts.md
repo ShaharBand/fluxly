@@ -161,6 +161,7 @@ This lets you inject custom behavior, logging, or extended data without modifyin
   - `status` → `StatusCodes` (WAITING, IN_PROGRESS, COMPLETED, FAILED)
   - `output` → `NodeOutput` (data produced by `_logic()`)
   - `error` → `NodeError` (if the execution fails)
+  - `attempt` → 1-indexed attempt number for this execution
 
 !!! note "Custom Execution"
     By overriding `_create_execution()` on a Node, you can use a custom subclass of `NodeExecution` that stores extra info (e.g., logs, intermediate metrics).
@@ -216,7 +217,7 @@ Using Custom Execution:
 
 ## WorkflowExecution
 
-`WorkflowExecution` represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. The default `WorkflowOutput` includes overall status and the list of `NodeExecution` objects produced during the run.
+`WorkflowExecution` represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. 
 
 **Default Execution Structure:**
 
@@ -224,17 +225,21 @@ Using Custom Execution:
 - `status` → `StatusCodes` (WAITING, IN_PROGRESS, COMPLETED, FAILED)
 - `output` → `WorkflowOutput` with:
   - `status` (mirrors workflow status)
-  - `nodes_executions: list[NodeExecution]`
+  - `node_to_executions: dict[str, list[NodeExecution]]` mapping node name → all its executions
 
 You can override `_create_execution()` on a `Workflow` to return a custom `WorkflowExecution` with a custom `WorkflowOutput`, for example to track workflow-level artifacts aggregated from nodes.
 
 !!! code "Custom WorkflowExecution with artifacts"
     ```python
+    from pydantic import BaseModel
     from fluxly.workflow import Workflow, WorkflowExecution, WorkflowOutput
 
-    class CustomWorkflowOutput(WorkflowOutput):
+    class WorkflowArtifact(BaseModel):
         name: str
         uri: str
+
+    class CustomWorkflowOutput(WorkflowOutput):
+        artifacts: list[WorkflowArtifact] = []
 
     class CustomWorkflowExecution(WorkflowExecution):
         output: CustomWorkflowOutput = CustomWorkflowOutput()
@@ -243,14 +248,16 @@ You can override `_create_execution()` on a `Workflow` to return a custom `Workf
         def _create_execution(self) -> CustomWorkflowExecution:
             return CustomWorkflowExecution()
 
-        def on_finish(self) -> None: 
+        def on_finish(self) -> None:
             # Collect artifacts exposed by nodes' outputs (if any)
-            for ex in self.current_execution.output.nodes_executions:
-                node_out = ex[:-1].output
-                if node_out.name:
-                    self.current_execution.output.name = node_out.name
-                if node_out.uri
-                    self.current_execution.output.uri = node_out.uri
+            artifacts: list[WorkflowArtifact] = []
+            for node_name, attempts in self.current_execution.output.node_to_executions.items():
+                for attempt_number, ex in attempts.items():
+                    node_out = ex.output
+                    if node_out.artifacts:
+                        for a in node_out.artifacts:
+                            artifacts.append(WorkflowArtifact(name=a.name, uri=a.uri))
+            self.current_execution.output.artifacts = artifacts
     ```
 
 This keeps artifacts typed and discoverable, without coupling business logic to orchestration.
