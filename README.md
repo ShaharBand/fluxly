@@ -13,6 +13,8 @@ Fluxly — Lightweight framework for portable, self-contained DAG workflows, dec
 
 ---
 
+## Introduction
+
 **Fluxly** is a lightweight framework for building and running **directed acyclic graph (DAG)-based workflows**.  
 
 The entire workflow acts as a **self-contained execution endpoint**:
