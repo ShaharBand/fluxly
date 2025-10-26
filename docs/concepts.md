@@ -148,6 +148,115 @@ Each node typically lives in its own file; import node classes and create instan
 
 ---
 
+## NodeExecution
+
+Fluxly allows you to **customize the execution structure** by overriding how executions, outputs, and metadata are created.  
+This lets you inject custom behavior, logging, or extended data without modifying the core node logic.
+
+
+**Default Execution Structure:**
+
+- **NodeExecution** wraps:
+  - `metadata` → `NodeMetadata` (start/end times, computed duration)
+  - `status` → `StatusCodes` (WAITING, IN_PROGRESS, COMPLETED, FAILED)
+  - `output` → `NodeOutput` (data produced by `_logic()`)
+  - `error` → `NodeError` (if the execution fails)
+
+!!! note "Custom Execution"
+    By overriding `_create_execution()` on a Node, you can use a custom subclass of `NodeExecution` that stores extra info (e.g., logs, intermediate metrics).
+
+Example:
+
+!!! code "custom_execution.py"
+    ```python 
+    from fluxly.node import NodeExecution, NodeMetadata, NodeOutput
+
+    # Custom output for this node
+    class CustomNodeOutput(NodeOutput):
+        result_text: str | None = None
+
+    # Custom execution with typed metadata and output
+    class CustomNodeExecution(NodeExecution):
+        metadata: NodeMetadata = NodeMetadata()
+        output: CustomNodeOutput = CustomNodeOutput()
+    ```
+
+Using Custom Execution:
+
+!!! code "custom_node.py"
+    ```python
+    from fluxly.node import Node
+
+    import CustomNodeExecution, CustomNodeOutput
+
+    class CustomNode(Node):
+        @property
+        def current_execution(self) -> CustomNodeExecution:
+            return super().current_execution
+
+        @property
+        def last_execution(self) -> CustomNodeExecution:
+            return super().last_execution
+
+        def _create_execution(self) -> CustomNodeExecution:
+            return CustomNodeExecution()
+
+        def _logic(self) -> None:
+            self.current_execution.output.result_text = f"processed{suffix}"
+            self._logger.info(f"CustomNode produced: {self.current_execution.output.result_text}")
+    ```
+
+!!! note "Benefits of Custom Execution & Metadata"
+    - Base output and metadata are tracked automatically.
+    - Output fields are fully typed for IDE and type-checker support.
+    - Custom execution enables **per-node outputs and richer metadata**.
+    - Facilitates advanced workflows with typed inspection and logging.
+
+---
+
+## WorkflowExecution
+
+`WorkflowExecution` represents a single run attempt of a workflow. It tracks workflow-level metadata, status, and output. The default `WorkflowOutput` includes overall status and the list of `NodeExecution` objects produced during the run.
+
+**Default Execution Structure:**
+
+- `metadata` → `WorkflowMetadata` (workflow start/end times, execution summary)
+- `status` → `StatusCodes` (WAITING, IN_PROGRESS, COMPLETED, FAILED)
+- `output` → `WorkflowOutput` with:
+  - `status` (mirrors workflow status)
+  - `nodes_executions: list[NodeExecution]`
+
+You can override `_create_execution()` on a `Workflow` to return a custom `WorkflowExecution` with a custom `WorkflowOutput`, for example to track workflow-level artifacts aggregated from nodes.
+
+!!! code "Custom WorkflowExecution with artifacts"
+    ```python
+    from fluxly.workflow import Workflow, WorkflowExecution, WorkflowOutput
+
+    class CustomWorkflowOutput(WorkflowOutput):
+        name: str
+        uri: str
+
+    class CustomWorkflowExecution(WorkflowExecution):
+        output: CustomWorkflowOutput = CustomWorkflowOutput()
+
+    class MyWorkflow(Workflow):
+        def _create_execution(self) -> CustomWorkflowExecution:
+            return CustomWorkflowExecution()
+
+        def on_finish(self) -> None: 
+            # Collect artifacts exposed by nodes' outputs (if any)
+            for ex in self.current_execution.output.nodes_executions:
+                node_out = ex[:-1].output
+                if node_out.name:
+                    self.current_execution.output.name = node_out.name
+                if node_out.uri
+                    self.current_execution.output.uri = node_out.uri
+    ```
+
+This keeps artifacts typed and discoverable, without coupling business logic to orchestration.
+
+---
+
 ## Execution Groups
 
 Execution groups define **sets of nodes**, where the workflow is considered **successful if at least one group succeeds**.  
@@ -180,10 +289,6 @@ Edges define **dependencies between nodes**. Conditional edges execute only if t
         node_c,
         condition=lambda: node_b.last_execution.status == StatusCodes.COMPLETED
     )
-    ```
-
-!!! code "Edge that runs only if source completed"
-    ```python
     workflow.add_edge_if_source_completed(node_a, node_b)
     ```
 
@@ -191,12 +296,7 @@ Edges define **dependencies between nodes**. Conditional edges execute only if t
 
 ## Wrapping & Extensibility
 
-Workflows and nodes can be **wrapped or subclassed** to add:
-
-- Logging and metrics
-- Policy enforcement
-- Integrations with external services
-- Retry or error-handling strategies
+Workflows and nodes are **fully extensible** — you can wrap or subclass them to introduce cross-cutting features.
 
 !!! code "Extensibility Example"
     ```python
@@ -251,76 +351,3 @@ Fluxly nodes provide **lifecycle hooks** that let you add custom behavior at key
         def on_finish(self) -> None:
             self._logger.info(f"Finished execution for node: {self.name}")
     ```
-
----
-
-## NodeExecution & WorkflowExecution
-
-Fluxly allows you to **customize the execution structure** by overriding how executions, outputs, and metadata are created.  
-This lets you inject custom behavior, logging, or extended data without modifying the core node logic.
-
-
-**Default Execution Structure:**
-
-- **NodeExecution** wraps:
-  - `metadata` → `NodeMetadata` (start/end times, computed duration)
-  - `status` → `StatusCodes` (WAITING, IN_PROGRESS, COMPLETED, FAILED)
-  - `output` → `NodeOutput` (data produced by `_logic()`)
-  - `error` → `NodeError` (if the execution fails)
-
-- **WorkflowExecution** aggregates:
-  - `metadata` → `WorkflowMetadata` (workflow start/end times, execution summary)
-  - `output` → Workflow-level output dictionary
-  - Status derived from node executions and execution groups
-
-!!! note "Custom Execution"
-    By overriding `_create_execution()` on a Node, you can use a custom subclass of `NodeExecution` that stores extra info (e.g., logs, intermediate metrics).
-
-Example:
-
-!!! code "custom_execution.py"
-    ```python
-    from pydantic import BaseModel
-    from fluxly.node import NodeExecution, NodeMetadata
-
-    # Custom output for this node
-    class CustomNodeOutput(BaseModel):
-        result_text: str | None = None
-
-    # Custom execution with typed metadata and output
-    class CustomNodeExecution(NodeExecution):
-        metadata: NodeMetadata = NodeMetadata()
-        output: CustomNodeOutput = CustomNodeOutput()
-    ```
-
-Using Custom Execution:
-
-!!! code "custom_node.py"
-    ```python
-    from fluxly.node import Node
-
-    import CustomNodeExecution, CustomNodeOutput
-
-    class CustomNode(Node):
-        @property
-        def current_execution(self) -> CustomNodeExecution:
-            return super().current_execution
-
-        @property
-        def last_execution(self) -> CustomNodeExecution:
-            return super().last_execution
-
-        def _create_execution(self) -> CustomNodeExecution:
-            return CustomNodeExecution()
-
-        def _logic(self) -> None:
-            self.current_execution.output.result_text = f"processed{suffix}"
-            self._logger.info(f"CustomNode produced: {self.current_execution.output.result_text}")
-    ```
-
-!!! note "Benefits of Custom Execution & Metadata"
-    - `metadata.start_time` and `metadata.end_time` are tracked automatically.
-    - Output fields are fully typed for IDE and type-checker support.
-    - Custom execution enables **per-node outputs and richer metadata**.
-    - Facilitates advanced workflows with typed inspection and logging.
-
