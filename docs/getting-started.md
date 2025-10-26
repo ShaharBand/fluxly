@@ -161,7 +161,7 @@ You can pass FastAPI and Uvicorn settings via `ApiConfig` and `app.configure_api
 !!! code "API configuration"
     ```python
     from fluxly import Fluxly
-    from fluxly.api.server import ApiConfig
+    from fluxly.api import ApiConfig
 
     app = Fluxly()
     app.add_endpoint("run-demo", workflow, MyWorkflowInput)
