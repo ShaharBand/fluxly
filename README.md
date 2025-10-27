@@ -13,7 +13,7 @@ Fluxly — Lightweight framework for portable, self-contained DAG workflows, dec
 
 ---
 
-## Introduction
+## 🚀 Introduction
 
 **Fluxly** is a lightweight framework for building and running **directed acyclic graph (DAG)-based workflows**.  
 
@@ -26,7 +26,7 @@ The entire workflow acts as a **self-contained execution endpoint**:
 With **Fluxly**, pipelines are **highly structured**, enabling safer execution, easier debugging, and better modularity.  
 Workflows can run standalone or as part of a larger system, making **Fluxly** both lightweight and flexible.
 
-## Why Fluxly (the problem it solves)
+## ❓ Why Fluxly (the problem it solves)
 
 - Unstructured container pipelines tend to become spaghetti: ad‑hoc scripts across containers, inconsistent inputs/outputs, and scattered retries/timeouts/logging with no shared wrapper.
 - Heavyweight orchestrators like Airflow add operational burden (schedulers, DBs, webservers, DAG deployment) when all you need is a simple, portable workflow image.
@@ -41,7 +41,7 @@ Workflows can run standalone or as part of a larger system, making **Fluxly** bo
 
 ---
 
-## Generated Entrypoints (CLI and API)
+## 🔌 Generated Entrypoints (CLI and API)
 
 The package automatically exposes a CLI command and API endpoints for each registered workflow.
 
@@ -57,7 +57,7 @@ The package automatically exposes a CLI command and API endpoints for each regis
 
 ---
 
-## Documentation
+## 📚 Documentation
 
 Comprehensive documentation for Fluxly is available online:
 
@@ -65,7 +65,7 @@ Comprehensive documentation for Fluxly is available online:
 
 ---
 
-## 1. Key Features
+## ✨ Key Features
 
 - **Flexible entrypoints** – workflows can be triggered via CLI, API calls, or environment variables.
 - **DAG-based workflows** – define arbitrary connections between nodes and their dependencies.
@@ -77,7 +77,7 @@ Comprehensive documentation for Fluxly is available online:
 
 ---
 
-## 2. Technology Stack
+## 🛠️ Technology Stack
 
 - [**Pydantic**](https://github.com/pydantic/pydantic): Strict data validation and schema for inputs/outputs.
 - [**Typer**](https://github.com/fastapi/typer): Easy wrapper for building great CLIs.
@@ -96,7 +96,7 @@ Comprehensive documentation for Fluxly is available online:
 
 ---
 
-## 3. Installation
+## 📦 Installation
 
 Install with `pip`:
 
