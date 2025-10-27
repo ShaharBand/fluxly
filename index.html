@@ -1159,14 +1159,10 @@ Workflows orchestrate retries, timeouts, and overall execution.</p>
     <span class="c1"># Edges (ordering and conditions)</span>
     <span class="n">wf</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>  <span class="c1"># run beta after alpha</span>
     <span class="n">wf</span><span class="o">.</span><span class="n">add_conditional_edge</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># example condition</span>
+    <span class="c1"># Alternatively, run a node only if its parent completed successfully</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">add_edge_if_source_completed</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wf</span>
-</code></pre></div>
-</div>
-<div class="admonition code">
-<p class="admonition-title">Edge that runs only if source completed</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Alternatively, run a node only if its parent completed successfully</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">add_edge_if_source_completed</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
 </code></pre></div>
 </div>
 <h3 id="4-expose-your-workflow">4) Expose Your Workflow<a class="headerlink" href="#4-expose-your-workflow" title="Permanent link">&para;</a></h3>
