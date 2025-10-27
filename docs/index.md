@@ -123,15 +123,12 @@ Workflows orchestrate retries, timeouts, and overall execution.
         # Edges (ordering and conditions)
         wf.add_edge(alpha, beta)  # run beta after alpha
         wf.add_conditional_edge(beta, gamma, condition=lambda: True)  # example condition
+        # Alternatively, run a node only if its parent completed successfully
+        wf.add_edge_if_source_completed(alpha, gamma)
 
         return wf
     ```
 
-!!! code "Edge that runs only if source completed"
-    ```python
-    # Alternatively, run a node only if its parent completed successfully
-    wf.add_edge_if_source_completed(alpha, gamma)
-    ```
 ### 4) Expose Your Workflow
 
 Use **Fluxly** to expose your workflow as a single, consistent entrypoint.  
