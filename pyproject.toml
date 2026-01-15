@@ -3,7 +3,7 @@ name = "fluxly"
 description = "A framework for building portable, self-contained DAG workflows decoupled from orchestration."
 readme = "README.md"
 authors = [{ name = "Shahar Band", email = "shahar1531@gmail.com" }]
-license = "MIT"
+license = { text = "MIT" }
 license-files = ["LICENSE"]
 keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "fluxly"]
 classifiers = [
@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-version = "1.0.0"
+dynamic = ["version"]
 requires-python = ">=3.10,<3.14"
 dependencies = [
     "pydantic>=2.10.4,<3",
@@ -51,8 +51,8 @@ pydantic = ">=2.10.4,<3"
 loguru = ">=0.7.0"
 diagrams = ">=0.23.4,<0.24"
 typer = ">=0.12.5,<1"
-fastapi = ">=0.119.1,<0.120"
-uvicorn = ">=0.38.0,<0.39"
+fastapi = ">=0.115.0,<1"
+uvicorn = ">=0.30.0,<1"
 
 [tool.pixi.feature.dev.dependencies]
 pixi-pycharm = ">=0.0.9,<0.0.10"
@@ -79,6 +79,9 @@ run-demo = "python -m examples.structured_demo.app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fluxly"]
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.mypy]
 strict = true
