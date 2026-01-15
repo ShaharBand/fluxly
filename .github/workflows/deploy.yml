@@ -13,6 +13,15 @@ on:
         options:
           - testpypi
           - pypi
+      bump_type:
+        description: "Version part to bump"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 jobs:
   publish-testpypi:
@@ -84,23 +93,10 @@ jobs:
       - name: Determine next release version
         id: versioning
         run: |
-          # 1) Get current VCS-derived version (may be like 0.1.2.post71)
           CURRENT="$(pixi run -e build hatch version)"
           echo "Current VCS version: $CURRENT"
-
-          # 2) Strip any .postN suffix to get base X.Y.Z
-          BASE="${CURRENT%%.post*}"
-
-          # 3) Parse and bump PATCH (X.Y.Z -> X.Y.(Z+1))
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
-          if [ -z "$MAJOR" ] || [ -z "$MINOR" ]; then
-            echo "Could not parse base version '$BASE'" >&2
-            exit 1
-          fi
-          PATCH="${PATCH:-0}"
-          NEXT_PATCH=$((PATCH + 1))
-          NEXT_VERSION="${MAJOR}.${MINOR}.${NEXT_PATCH}"
-
+          BUMP_TYPE="${{ github.event.inputs.bump_type || 'patch' }}"
+          NEXT_VERSION="$(pixi run python .github/scripts/compute_next_version.py --current "$CURRENT" --bump "$BUMP_TYPE")"
           echo "Next version: $NEXT_VERSION"
           echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
 
