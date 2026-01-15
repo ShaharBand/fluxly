@@ -38,10 +38,10 @@ jobs:
         run: pixi install --environment build
 
       - name: Show version (dev)
-        run: pixi run hatch version
+        run: pixi exec -e build hatch version
 
       - name: Build
-        run: pixi run hatch build
+        run: pixi exec -e build hatch build
 
       - name: Publish distribution to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -56,6 +56,7 @@ jobs:
       url: https://pypi.org/p/fluxly
     permissions:
       id-token: write
+      contents: write
     steps:
       - name: Checkout repo (full history for hatch-vcs)
         uses: actions/checkout@v6
@@ -71,11 +72,40 @@ jobs:
       - name: Install build env
         run: pixi install --environment build
 
+      - name: Fetch tags (ensure latest tags are present)
+        run: git fetch --tags --force --prune
+
+      - name: Determine release tag from version
+        if: github.event_name == 'workflow_dispatch'
+        id: compute_tag
+        run: |
+          VERSION="$(pixi exec -e build hatch version)"
+          BASE="$(echo "$VERSION" | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "release_tag=v$BASE" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.compute_tag.outputs.release_tag }}
+          release_name: fluxly ${{ steps.compute_tag.outputs.base }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      - name: Fetch tags after release
+        if: github.event_name == 'workflow_dispatch'
+        run: git fetch --tags --force --prune
+
       - name: Show version (release)
-        run: pixi run hatch version
+        run: pixi exec -e build hatch version
 
       - name: Build
-        run: pixi run hatch build
+        run: pixi exec -e build hatch build
 
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
