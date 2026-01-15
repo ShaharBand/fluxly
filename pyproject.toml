@@ -1,9 +1,10 @@
 [project]
-name = "Fluxly"
+name = "fluxly"
 description = "A framework for building portable, self-contained DAG workflows decoupled from orchestration."
 readme = "README.md"
 authors = [{ name = "Shahar Band", email = "shahar1531@gmail.com" }]
-license = { text = "MIT License" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["framework", "pipeline", "flow", "dag", "cli", "pipeline framework", "fluxly"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -29,6 +30,12 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[project.urls]
+Homepage = "https://github.com/ShaharBand/fluxly"
+Documentation = "https://shaharband.github.io/fluxly/"
+Repository = "https://github.com/ShaharBand/fluxly"
+Issues = "https://github.com/ShaharBand/fluxly/issues"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
