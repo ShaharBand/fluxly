@@ -15,11 +15,16 @@ on:
           - pypi
 
 jobs:
-  build:
+  publish-testpypi:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testpypi' || github.event_name == 'push'
     permissions:
-      contents: read  
-      id-token: write 
+      contents: read
+      id-token: write
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/fluxly
+
     steps:
       - name: Checkout repo (full history for hatch-vcs)
         uses: actions/checkout@v6
@@ -41,39 +46,14 @@ jobs:
       - name: Build distribution
         run: pixi run -e build hatch build
 
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-  publish-testpypi:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testpypi' || github.event_name == 'push'
-    permissions:
-      contents: read
-      id-token: write
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/fluxly
-
-    steps:
-      - name: Download built artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
 
   publish-pypi:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi' || github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi'
     permissions:
       contents: write
       id-token: write
@@ -96,40 +76,39 @@ jobs:
       - name: Install build environment
         run: pixi install --environment build
 
-      - name: Determine next version and create Git tag
-        id: tag
+      - name: Configure Git
         run: |
-          # compute next version from hatch-vcs
-          NEXT_VERSION=$(pixi run -e build hatch version)
-          echo "Next version: $NEXT_VERSION"
-
-          # create and push Git tag
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag -a "v$NEXT_VERSION" -m "Release v$NEXT_VERSION"
-          git push origin "v$NEXT_VERSION"
 
-          echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Bump to release version
+        run: pixi run -e build hatch version bump --release
+
+      - name: Read release version
+        id: version
+        run: |
+          RELEASE_VERSION=$(pixi run -e build hatch version)
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Release version: $RELEASE_VERSION"
+
+      - name: Create and push Git tag
+        run: |
+          git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
+          git push origin "v${{ steps.version.outputs.version }}"
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.tag.outputs.version }}
-          release_name: Fluxly ${{ steps.tag.outputs.version }}
+          tag_name: v${{ steps.version.outputs.version }}
+          release_name: Fluxly ${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
           generate_release_notes: true
 
-      - name: Show version
-        run: pixi run -e build hatch version
-
-      - name: Download built artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
+      - name: Build distribution (release)
+        run: pixi run -e build hatch build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
