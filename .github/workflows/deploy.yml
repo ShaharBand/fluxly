@@ -54,6 +54,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/fluxly
 
     steps:
       - name: Download built artifact
@@ -74,11 +77,15 @@ jobs:
     permissions:
       contents: write
       id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fluxly
+      
     steps:
       - name: Checkout repo (full history)
         uses: actions/checkout@v6
         with:
-          persist-credentials: false
+          persist-credentials: true
           fetch-depth: 0
 
       - name: Install Pixi
