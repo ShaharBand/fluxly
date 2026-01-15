@@ -51,4 +51,4 @@ jobs:
         run: pixi run coverage
 
       - name: Show computed version
-        run: pixi exec -e build hatch version
+        run: pixi run -e build hatch version
