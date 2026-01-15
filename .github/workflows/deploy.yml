@@ -80,29 +80,42 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-
-      - name: Bump to release version
-        run: pixi run -e build hatch version bump --release
-
-      - name: Read release version
-        id: version
+      
+      - name: Determine next release version
+        id: versioning
         run: |
-          RELEASE_VERSION=$(pixi run -e build hatch version)
-          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "Release version: $RELEASE_VERSION"
+          # 1) Get current VCS-derived version (may be like 0.1.2.post71)
+          CURRENT="$(pixi run -e build hatch version)"
+          echo "Current VCS version: $CURRENT"
+
+          # 2) Strip any .postN suffix to get base X.Y.Z
+          BASE="${CURRENT%%.post*}"
+
+          # 3) Parse and bump PATCH (X.Y.Z -> X.Y.(Z+1))
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
+          if [ -z "$MAJOR" ] || [ -z "$MINOR" ]; then
+            echo "Could not parse base version '$BASE'" >&2
+            exit 1
+          fi
+          PATCH="${PATCH:-0}"
+          NEXT_PATCH=$((PATCH + 1))
+          NEXT_VERSION="${MAJOR}.${MINOR}.${NEXT_PATCH}"
+
+          echo "Next version: $NEXT_VERSION"
+          echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push Git tag
         run: |
-          git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
-          git push origin "v${{ steps.version.outputs.version }}"
+          git tag -a "v${{ steps.versioning.outputs.version }}" -m "Release v${{ steps.versioning.outputs.version }}"
+          git push origin "v${{ steps.versioning.outputs.version }}"
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          release_name: Fluxly ${{ steps.version.outputs.version }}
+          tag_name: v${{ steps.versioning.outputs.version }}
+          release_name: Fluxly ${{ steps.versioning.outputs.version }}
           draft: false
           prerelease: false
           generate_release_notes: true

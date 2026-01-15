@@ -67,6 +67,7 @@ mkdocs-material = ">=9.6.22,<10"
 [tool.pixi.feature.build.dependencies]
 twine = ">=6.0.1,<7"
 hatch = ">=1.14.0,<2"
+semver = ">=3.0.4,<4"
 
 [tool.pixi.feature.dev.tasks]
 test = "pytest ."
@@ -81,12 +82,12 @@ run-demo = "python -m examples.structured_demo.app"
 packages = ["fluxly"]
 
 [tool.hatch.version]
-source = "vcs"
-scheme = "guess-next-dev"
+source = "vcs" 
 
 [tool.hatch.version.raw-options]
-version_scheme = "post-release"
+version_scheme = "release-branch-semver"
 local_scheme = "no-local-version"
+fallback_version = "0.0.0"
 
 [tool.mypy]
 strict = true
