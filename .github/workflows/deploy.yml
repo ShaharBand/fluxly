@@ -1,8 +1,6 @@
 name: deploy
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       target:
@@ -19,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     steps:
       - name: Checkout repo (full history for hatch-vcs)
         uses: actions/checkout@v6
@@ -31,13 +30,13 @@ jobs:
           curl -fsSL https://pixi.sh/install.sh | bash
           echo "$HOME/.pixi/bin" >> $GITHUB_PATH
 
-      - name: Install build env
+      - name: Install build environment
         run: pixi install --environment build
 
-      - name: Show version (release tag)
+      - name: Show current hatch version
         run: pixi run -e build hatch version
 
-      - name: Build
+      - name: Build distribution
         run: pixi run -e build hatch build
 
       - name: Upload dist artifact
@@ -49,12 +48,7 @@ jobs:
   publish-testpypi:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testpypi')
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/fluxly
-    permissions:
-      id-token: write
+    if: github.event.inputs.target == 'testpypi'
     steps:
       - name: Download built artifact
         uses: actions/download-artifact@v4
@@ -62,7 +56,7 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Publish distribution to TestPyPI
+      - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
@@ -70,18 +64,43 @@ jobs:
   publish-pypi:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi'
-    environment:
-      name: pypi
-      url: https://pypi.org/p/fluxly
+    if: github.event.inputs.target == 'pypi'
     permissions:
-      id-token: write
+      contents: write
     steps:
+      - name: Checkout repo (full history)
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install Pixi
+        run: |
+          curl -fsSL https://pixi.sh/install.sh | bash
+          echo "$HOME/.pixi/bin" >> $GITHUB_PATH
+
+      - name: Install build environment
+        run: pixi install --environment build
+
+      - name: Determine next version and create Git tag
+        id: tag
+        run: |
+          NEXT_VERSION=$(pixi run -e build hatch version)  # hatch-vcs computes version from Git
+          echo "Next version: $NEXT_VERSION"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag "v$NEXT_VERSION"
+          git push origin "v$NEXT_VERSION"
+          echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Show version
+        run: pixi run -e build hatch version
+
       - name: Download built artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist/
 
-      - name: Publish distribution to PyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
