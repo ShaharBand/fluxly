@@ -1,6 +1,8 @@
 name: deploy
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       target:
@@ -16,8 +18,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      id-token: write
+      contents: write  
+      id-token: write 
     steps:
       - name: Checkout repo (full history for hatch-vcs)
         uses: actions/checkout@v6
@@ -48,7 +50,7 @@ jobs:
   publish-testpypi:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.target == 'testpypi'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testpypi' || github.event_name == 'push'
     steps:
       - name: Download built artifact
         uses: actions/download-artifact@v4
@@ -64,7 +66,7 @@ jobs:
   publish-pypi:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.target == 'pypi'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi' || github.event_name == 'push'
     permissions:
       contents: write
     steps:
@@ -85,13 +87,28 @@ jobs:
       - name: Determine next version and create Git tag
         id: tag
         run: |
-          NEXT_VERSION=$(pixi run -e build hatch version)  # hatch-vcs computes version from Git
+          # compute next version from hatch-vcs
+          NEXT_VERSION=$(pixi run -e build hatch version)
           echo "Next version: $NEXT_VERSION"
+
+          # create and push Git tag
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git tag "v$NEXT_VERSION"
+          git tag -a "v$NEXT_VERSION" -m "Release v$NEXT_VERSION"
           git push origin "v$NEXT_VERSION"
+
           echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.tag.outputs.version }}
+          release_name: Fluxly ${{ steps.tag.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
 
       - name: Show version
         run: pixi run -e build hatch version
