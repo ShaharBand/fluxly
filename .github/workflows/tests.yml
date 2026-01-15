@@ -1,4 +1,4 @@
-name: CI
+name: tests
 
 on:
   push:
@@ -7,8 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
+    concurrency:
+      group: tests-${{ github.ref }}
+      cancel-in-progress: true
 
     strategy:
       fail-fast: false
@@ -18,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Pixi
         run: |
@@ -44,3 +49,6 @@ jobs:
 
       - name: Coverage
         run: pixi run coverage
+
+      - name: Show computed version
+        run: pixi run hatch version
