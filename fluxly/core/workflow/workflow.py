@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Annotated
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr, SerializeAsAny
 
 from fluxly.core.docs_generator.generator import generate_workflow_documentation
 from fluxly.core.exceptions import TimeoutException, WorkflowException
@@ -29,7 +29,10 @@ class Workflow(BaseModel):
     name: Annotated[str, Field(max_length=64, min_length=2, description="The name of the workflow.")]
     description: Annotated[str | None, Field(max_length=128, min_length=3, description="The description of the workflow.")] = None
     version: Annotated[str | None, Field(description="The workflow version.")] = None
-    inputs: Annotated[WorkflowInput | None, Field(description="The workflow inputs.")] = None
+    inputs: Annotated[
+        SerializeAsAny[WorkflowInput] | None,
+        Field(description="The workflow inputs."),
+    ] = None
 
     _id: str = PrivateAttr(default_factory=lambda: str(uuid4()))
     _run_id: str | None = PrivateAttr(default=None)

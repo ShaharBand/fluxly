@@ -1,6 +1,6 @@
 [
-  {"userId": 1, "email": "Alice@Example.com"},
+  {"userId": 1, "email": "foo@Example.com"},
   {"userId": 2, "email": "bob@example.com"},
-  {"userId": 3, "email": "  CAROL@EXAMPLE.COM  "},
+  {"userId": 3, "email": "  groot@example.com"},
   {"userId": 4, "email": "invalid-email"}
 ]
