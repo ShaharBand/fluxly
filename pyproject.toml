@@ -55,6 +55,7 @@ fastapi = ">=0.115.0,<1"
 uvicorn = ">=0.30.0,<1"
 
 [tool.pixi.feature.dev.dependencies]
+requests = ">=2.31.0,<3"
 pixi-pycharm = ">=0.0.9,<0.0.10"
 pytest = ">=8.4.2,<9"
 ruff = ">=0.14.1,<0.15"
@@ -77,6 +78,7 @@ coverage = "coverage run -m pytest && coverage report -m"
 docs-build = "mkdocs build"
 docs-serve = "mkdocs serve"
 run-demo = "python -m examples.structured_demo.app"
+run-etl = "python -m examples.etl_pipeline.app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fluxly"]

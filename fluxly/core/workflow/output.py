@@ -1,12 +1,15 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SerializeAsAny
 
 from fluxly.core.node.execution import NodeExecution
 
 
 class WorkflowOutput(BaseModel):
-    node_to_executions: Annotated[dict[str, list[NodeExecution]], Field(description="Mapping of node name to all its executions")] = {}
+    node_to_executions: Annotated[
+        dict[str, list[SerializeAsAny[NodeExecution]]],
+        Field(description="Mapping of node name to all its executions"),
+    ] = {}
 
     def __str__(self) -> str:
         return self.model_dump_json(indent=2)
