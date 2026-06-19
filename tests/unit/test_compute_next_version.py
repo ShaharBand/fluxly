@@ -37,6 +37,22 @@ class ComputeNextVersionTest(unittest.TestCase):
     def test_first_release_without_tags(self) -> None:
         self.assertEqual(cnv.compute_next_version("0.0.0", "patch"), "0.0.1")
 
+    def test_testpypi_dev_version(self) -> None:
+        original = cnv.get_latest_tag_version
+        cnv.get_latest_tag_version = lambda: "0.1.1"
+        try:
+            self.assertEqual(cnv.compute_testpypi_version(42), "0.1.1.dev42")
+        finally:
+            cnv.get_latest_tag_version = original
+
+    def test_testpypi_dev_version_without_tags(self) -> None:
+        original = cnv.get_latest_tag_version
+        cnv.get_latest_tag_version = lambda: None
+        try:
+            self.assertEqual(cnv.compute_testpypi_version(7), "0.0.0.dev7")
+        finally:
+            cnv.get_latest_tag_version = original
+
 
 if __name__ == "__main__":
     unittest.main()
