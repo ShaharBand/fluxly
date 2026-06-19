@@ -93,10 +93,10 @@ jobs:
       - name: Determine next release version
         id: versioning
         run: |
-          CURRENT="$(pixi run -e build hatch version)"
-          echo "Current VCS version: $CURRENT"
           BUMP_TYPE="${{ github.event.inputs.bump_type || 'patch' }}"
-          NEXT_VERSION="$(pixi run python .github/scripts/compute_next_version.py --current "$CURRENT" --bump "$BUMP_TYPE")"
+          LATEST_TAG="$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)"
+          echo "Latest release tag: ${LATEST_TAG:-none}"
+          NEXT_VERSION="$(pixi run python .github/scripts/compute_next_version.py --latest-tag --bump "$BUMP_TYPE")"
           echo "Next version: $NEXT_VERSION"
           echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
 
