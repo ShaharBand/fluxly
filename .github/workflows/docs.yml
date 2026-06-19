@@ -3,18 +3,21 @@ name: Build and Deploy GitHub Pages
 on:
   push:
     branches:
-      - main 
+      - main
   workflow_dispatch:
 
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
 permissions:
-  contents: write 
+  contents: read
   pages: write
   id-token: write
 
 jobs:
   build_mkdocs:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,26 +29,21 @@ jobs:
           curl -fsSL https://pixi.sh/install.sh | bash
           echo "$HOME/.pixi/bin" >> $GITHUB_PATH
 
-      - name: Build and Deploy MkDocs
-        run: pixi run -e dev mkdocs gh-deploy --force
+      - name: Build MkDocs site
+        run: pixi run -e dev mkdocs build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
   deploy_mkdocs:
     needs: build_mkdocs
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
