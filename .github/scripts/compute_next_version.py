@@ -3,7 +3,6 @@ import argparse
 import re
 import subprocess
 
-
 _VERSION_RE = re.compile(r"^v?(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)$")
 
 
