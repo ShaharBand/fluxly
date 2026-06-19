@@ -55,10 +55,7 @@ jobs:
         run: pixi install --environment build
 
       - name: Build TestPyPI distribution
-        run: |
-          VERSION="$(pixi run python .github/scripts/compute_next_version.py --testpypi-dev --run-number "$GITHUB_RUN_NUMBER")"
-          pixi run -e build hatch version "$VERSION"
-          pixi run -e build hatch build
+        run: pixi run -e build hatch build
 
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1

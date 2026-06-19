@@ -54,20 +54,9 @@ def compute_next_version(current: str, bump: str) -> str:
     return f"{major}.{minor}.{patch}"
 
 
-def compute_testpypi_version(run_number: int) -> str:
-    base = get_latest_tag_version() or "0.0.0"
-    return f"{base}.dev{run_number}"
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--testpypi-dev",
-        action="store_true",
-        help="Build a unique TestPyPI dev version from the latest release tag",
-    )
-    parser.add_argument("--run-number", type=int, help="CI run number for TestPyPI dev builds")
-    source = parser.add_mutually_exclusive_group()
+    source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--current", help="Released version to bump from (x.y.z or vx.y.z)")
     source.add_argument(
         "--latest-tag",
@@ -76,15 +65,6 @@ def main() -> int:
     )
     parser.add_argument("--bump", choices=["major", "minor", "patch"], default="patch")
     args = parser.parse_args()
-
-    if args.testpypi_dev:
-        if args.run_number is None:
-            parser.error("--run-number is required with --testpypi-dev")
-        print(compute_testpypi_version(args.run_number))
-        return 0
-
-    if not args.current and not args.latest_tag:
-        parser.error("one of --current, --latest-tag, or --testpypi-dev is required")
 
     current = get_latest_tag_version() or "0.0.0" if args.latest_tag else args.current
     print(compute_next_version(current, args.bump))
