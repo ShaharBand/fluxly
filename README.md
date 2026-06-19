@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./docs/imgs/logo.png" 
+  <img src="https://raw.githubusercontent.com/ShaharBand/fluxly/main/docs/imgs/logo.png" 
        style="max-width: 250px;" 
        alt="Fluxly Logo" 
        title="Fluxly Logo">
@@ -37,7 +37,7 @@ Workflows can run standalone or as part of a larger system, making **Fluxly** bo
 
 ---
 
-<img src="docs/imgs/complex_workflow.png" alt="Complex Workflow Diagram" title="Complex Workflow Diagram" style="max-width: 700px; width: 100%;" />
+<img src="https://raw.githubusercontent.com/ShaharBand/fluxly/main/docs/imgs/complex_workflow.png" alt="Complex Workflow Diagram" title="Complex Workflow Diagram" style="max-width: 700px; width: 100%;" />
 
 ---
 
@@ -46,12 +46,12 @@ Workflows can run standalone or as part of a larger system, making **Fluxly** bo
 The package automatically exposes a CLI command and API endpoints for each registered workflow.
 
 <div align="center">
-  <img src="docs/imgs/cli_menu.png" alt="Fluxly CLI Menu" title="Fluxly CLI Menu" style="max-width: 700px; width: 100%;" />
+  <img src="https://raw.githubusercontent.com/ShaharBand/fluxly/main/docs/imgs/cli_menu.png" alt="Fluxly CLI Menu" title="Fluxly CLI Menu" style="max-width: 700px; width: 100%;" />
   <p><em>Auto-generated CLI commands per workflow.</em></p>
 </div>
 
 <div align="center">
-  <img src="docs/imgs/swagger.png" alt="Fluxly Swagger UI" title="Fluxly Swagger UI" style="max-width: 700px; width: 100%;" />
+  <img src="https://raw.githubusercontent.com/ShaharBand/fluxly/main/docs/imgs/swagger.png" alt="Fluxly Swagger UI" title="Fluxly Swagger UI" style="max-width: 700px; width: 100%;" />
   <p><em>Auto-generated API endpoints per workflow in Swagger UI.</em></p>
 </div>
 
